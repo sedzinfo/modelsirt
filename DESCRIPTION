@@ -1,0 +1,14 @@
+Package: modelsirt
+Title: IRT curves with shinyapps
+Version: 0.0.0.9000
+Authors@R: person("Dimitrios", "Zacharatos", email = "dimitrios@psycholate.com", role = c("aut", "cre"))
+Author: Dimitrios Zacharatos [aut,cre]
+ 		Metin Bulus [aut,cre]
+		Wes Bonifay [aut,cre]
+Maintainer: Dimitrios Zacharatos <dimitrios@psycholate.com>
+Depends: ggplot2
+Description: IRT curves with shinyapps.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2

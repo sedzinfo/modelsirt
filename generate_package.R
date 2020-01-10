@@ -7,7 +7,7 @@
 library(devtools)
 library(roxygen2)
 setwd("/mnt/WD500/public_rstatistics/")
-usethis::create_package("modelsirt")
+# usethis::create_package("modelsirt")
 document("modelsirt")
 install("modelsirt")
 

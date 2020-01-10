@@ -286,6 +286,26 @@ modelsirt<-function() {
     ##########################################################################################
     # RACH
     ##########################################################################################
+    # output$dich_plot<-renderPlot({
+    #   D<-switch(input$D_rach,"1"=1,"2"=1.702)
+    #   for(j in 1:N_rach){ p1_rach[j]<-Pfun_rach(D=D,la=input$la_rach,ua=input$ua_rach,theta=thetas_rach[j],delta=input$delta_rach,alpha=input$alpha_rach) }
+    #   if(input$la_rach==0 & input$ua_rach==1 & input$alpha_rach==1){title<-c("Rasch Model")}
+    #   if(input$la_rach==0 & input$ua_rach==1 & input$alpha_rach!=1){title<-c("1PL or 2PL Model")}
+    #   if(input$ua_rach==1 & input$la_rach!=0){title<-c("3PL Model")}
+    #   if(input$la_rach!=0 & input$ua_rach!=1){title<-c("4PL Model")}
+    #   output$feedback<-renderText({ ifelse(input$ua_rach!=1 & input$la_rach==0,"No such model!",paste(title,": a=",input$alpha_rach," b=",input$delta_rach," c=",input$la_rach," d=",input$ua_rach)) })
+    #   graphics::plot(NULL,ylab=expression(P(X)),xlab=expression(theta),main=paste(title),xlim=c(-6,6),ylim=c(0,1))
+    #   modprob<-switch(input$modprob_rach,"1"=1,"2"=2)
+    #   if(modprob==1){
+    #     lines(thetas_rach,p1_rach,type="l",xlim=c(-6,6),col=1)
+    #     legend(legend="P(X=1|theta)",col=1,lty=1,"right")
+    #   }
+    #   if(modprob==2){
+    #     lines(thetas_rach,p1_rach,type="l",xlim=c(-6,6),col=1)
+    #     lines(thetas_rach,1-p1_rach,type="l",xlim=c(-6,6),col=2)
+    #     legend(legend=c("P(X=1|theta)","P(X=0|theta)"),col=c(1,2),lty=1,"right")
+    #   }
+    # })
     output$rach_dichotomous_plotly<-renderPlotly({
       D<-switch(input$D_rach,"1"=1,"2"=1.702)
       for(j in 1:N_rach){ p1_rach[j]<-Pfun_rach(D=D,la=input$la_rach,ua=input$ua_rach,theta=thetas_rach[j],delta=input$delta_rach,alpha=input$alpha_rach) }
@@ -304,14 +324,39 @@ modelsirt<-function() {
       }
       plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
-               xaxis=list(title="θ",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(x)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE),
+               xaxis=list(title="θ"),
+               yaxis=list(title="P(x)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_rach,na.rm=TRUE),xend=max(thetas_rach,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+        add_segments(x=min(thetas_rach,na.rm=TRUE),xend=max(thetas_rach,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # PARTIAL CREDIT
     ##########################################################################################
+    # output$gpcm_plot<-renderPlot({
+    #   D<-switch(input$D_pcm,"1" = 1,"2" = 1.702)
+    #   if(input$alpha_pcm==0){stop("Why would you have an item with 0(zero) discrimination!")}
+    #   p1num_pcm=1
+    #   for(j in 1:N_pcm){
+    #     p2num_pcm[j]<-p2fun_pcm(D=D,theta=thetas_pcm[j],alpha=input$alpha_pcm,delta1=input$delta1_pcm)
+    #     p3num_pcm[j]<-p3fun_pcm(D=D,theta=thetas_pcm[j],alpha=input$alpha_pcm,delta1=input$delta1_pcm,delta2=input$delta2_pcm)
+    #     p4num_pcm[j]<-p4fun_pcm(D=D,theta=thetas_pcm[j],alpha=input$alpha_pcm,delta1=input$delta1_pcm,delta2=input$delta2_pcm,delta3=input$delta3_pcm)
+    #     p5num_pcm[j]<-p5fun_pcm(D=D,theta=thetas_pcm[j],alpha=input$alpha_pcm,delta1=input$delta1_pcm,delta2=input$delta2_pcm,delta3=input$delta3_pcm,delta4=input$delta4_pcm)
+    #   }
+    #   pdenom<-1+p2num_pcm+p3num_pcm+p4num_pcm+p5num_pcm
+    #   p1<-p1num_pcm/pdenom
+    #   p2<-p2num_pcm/pdenom
+    #   p3<-p3num_pcm/pdenom
+    #   p4<-p4num_pcm/pdenom
+    #   p5<-p5num_pcm/pdenom
+    #   title<-ifelse(input$alpha_pcm==1,"Partial Credit Model (Masters,1982)","Generalized Partial Credit Model (Muraki,1992)")
+    #   graphics::plot(NULL,ylab=expression(P(X)),xlab=expression(theta),main=paste(title),xlim=c(-6,6),ylim=c(0,1))
+    #   lines(thetas_pcm,p1,type="l",xlim=c(-6,6),col=2)
+    #   lines(thetas_pcm,p2,type="l",xlim=c(-6,6),col=3)
+    #   lines(thetas_pcm,p3,type="l",xlim=c(-6,6),col=4)
+    #   lines(thetas_pcm,p4,type="l",xlim=c(-6,6),col=5)
+    #   lines(thetas_pcm,p5,type="l",xlim=c(-6,6),col=6)
+    #   legend(legend=c("P(X=1|theta)","P(X=2|theta)","P(X=3|theta)","P(X=4|theta)","P(X=5|theta)"),col=2:6,lty=1,"right")
+    # })
     output$gpcm_plotly<-renderPlotly({
       D<-switch(input$D_pcm,"1" = 1,"2" = 1.702)
       if(input$alpha_pcm==0){stop("Why would you have an item with 0(zero) discrimination!")}
@@ -336,14 +381,31 @@ modelsirt<-function() {
                 data.frame(x=thetas_pcm,y=p5,type="P(X=5|theta)"))
       plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
-               xaxis=list(title="θ",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(x)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE),
+               xaxis=list(title="θ"),
+               yaxis=list(title="P(x)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_pcm,na.rm=TRUE),xend=max(thetas_pcm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+        add_segments(x=min(thetas_pcm,na.rm=TRUE),xend=max(thetas_pcm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # GRADED RESPONSE
     ##########################################################################################
+    # output$grm_plot<-renderPlot({
+    #   D<-switch(input$D_grm,"1"=1,"2"=1.702)
+    #   p<-matrix(NA,nrow=N_grm,4)
+    #   for(j in 1:N_grm){
+    #     p[j,1]<-Pfun_grm(D=D,theta=thetas_grm[j],delta=input$delta1_grm,alpha=input$alpha_grm)
+    #     p[j,2]<-Pfun_grm(D=D,theta=thetas_grm[j],delta=input$delta2_grm,alpha=input$alpha_grm)
+    #     p[j,3]<-Pfun_grm(D=D,theta=thetas_grm[j],delta=input$delta3_grm,alpha=input$alpha_grm)
+    #     p[j,4]<-Pfun_grm(D=D,theta=thetas_grm[j],delta=input$delta4_grm,alpha=input$alpha_grm)
+    #   }
+    #   graphics::plot(NULL,ylab="P(X=m|theta)",xlab=expression(theta),main="Graded Response Model",xlim=c(-6,6),ylim=c(0,1))
+    #   lines(thetas_grm,1-p[,1],type="l",xlim=c(-6,6),col=2)
+    #   lines(thetas_grm,p[,1]-p[,2],type="l",xlim=c(-6,6),col=3)
+    #   lines(thetas_grm,p[,2]-p[,3],type="l",xlim=c(-6,6),col=4)
+    #   lines(thetas_grm,p[,3]-p[,4],type="l",xlim=c(-6,6),col=5)
+    #   lines(thetas_grm,p[,4]-0,type="l",xlim=c(-6,6),col=6)
+    #   legend(legend=c("P(X=1|theta)","P(X=2|theta)","P(X=3|theta)","P(X=4|theta)","P(X=5|theta)"),col=2:6,lty=1,"right")
+    # })
     output$grm_plotly<-renderPlotly({
       D<-switch(input$D_grm,"1"=1,"2"=1.702)
       p<-matrix(NA,nrow=N_grm,4)
@@ -361,14 +423,39 @@ modelsirt<-function() {
                 data.frame(x=thetas_grm,y=p[,4]-0,type="P(X=5|theta)"))
       plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
-               xaxis=list(title="θ",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(X=m|theta)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE),
+               xaxis=list(title="θ"),
+               yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_grm,na.rm=TRUE),xend=max(thetas_grm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+        add_segments(x=min(thetas_grm,na.rm=TRUE),xend=max(thetas_grm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # RATING SCALE
     ##########################################################################################
+    # output$grsm_plot<-renderPlot({
+    #   D<-switch(input$D_rsm,"1"=1,"2"=1.702)
+    #   if(input$alpha_rsm==0){stop("Why would you have an item with 0 (zero) discrimination!")}
+    #   p1num_rsm=1
+    #   for(j in 1:N_rsm){
+    #     p2num_rsm[j]<-p2fun_rsm(D=D,theta=thetas_rsm[j],alpha=input$alpha_rsm,delta=input$delta_rsm,tau1=input$tau1_rsm)
+    #     p3num_rsm[j]<-p3fun_rsm(D=D,theta=thetas_rsm[j],alpha=input$alpha_rsm,delta=input$delta_rsm,tau1=input$tau1_rsm,tau2=input$tau2_rsm)
+    #     p4num_rsm[j]<-p4fun_rsm(D=D,theta=thetas_rsm[j],alpha=input$alpha_rsm,delta=input$delta_rsm,tau1=input$tau1_rsm,tau2=input$tau2_rsm,tau3=input$tau3_rsm)
+    #     p5num_rsm[j]<-p5fun_rsm(D=D,theta=thetas_rsm[j],alpha=input$alpha_rsm,delta=input$delta_rsm,tau1=input$tau1_rsm,tau2=input$tau2_rsm,tau3=input$tau3_rsm,tau4=input$tau4_rsm)
+    #   }
+    #   pdenom<-1+p2num_rsm+p3num_rsm+p4num_rsm+p5num_rsm
+    #   p1<-p1num_rsm/pdenom
+    #   p2<-p2num_rsm/pdenom
+    #   p3<-p3num_rsm/pdenom
+    #   p4<-p4num_rsm/pdenom
+    #   p5<-p5num_rsm/pdenom
+    #   title<-ifelse(input$alpha_rsm==1,"Rating Scale Model (Andrich,1978)","Generalized Rating Scale Model (Muraki,1990)")
+    #   graphics::plot(NULL,ylab="P(X=m|theta)",xlab=expression(theta),main=paste(title),xlim=c(-6,6),ylim=c(0,1))
+    #   lines(thetas_rsm,p1,type="l",xlim=c(-6,6),col=2)
+    #   lines(thetas_rsm,p2,type="l",xlim=c(-6,6),col=3)
+    #   lines(thetas_rsm,p3,type="l",xlim=c(-6,6),col=4)
+    #   lines(thetas_rsm,p4,type="l",xlim=c(-6,6),col=5)
+    #   lines(thetas_rsm,p5,type="l",xlim=c(-6,6),col=6)
+    #   legend(legend=c("P(X=1|theta)","P(X=2|theta)","P(X=3|theta)","P(X=4|theta)","P(X=5|theta)"),col=2:6,lty=1,"right")
+    # })
     output$grsm_plotly<-renderPlotly({
       D<-switch(input$D_rsm,"1"=1,"2"=1.702)
       if(input$alpha_rsm==0){stop("Why would you have an item with 0 (zero) discrimination!")}
@@ -393,14 +480,37 @@ modelsirt<-function() {
                 data.frame(x=thetas_rsm,y=p5,type="P(X=5|theta)"))
       plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
-               xaxis=list(title="θ",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(X=m|theta)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE),
+               xaxis=list(title="θ"),
+               yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_rsm,na.rm=TRUE),xend=max(thetas_rsm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+        add_segments(x=min(thetas_rsm,na.rm=TRUE),xend=max(thetas_rsm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # NOMINAL RESPONSE
     ##########################################################################################
+    # output$nrm_plot<-renderPlot({
+    #   D<-switch(input$D_nrm,"1"=1,"2"=1.702)
+    #   p1num_nrm=1
+    #   for(j in 1:N_nrm){
+    #     p2num_nrm[j]<-p2fun_nrm(D=D,theta=thetas_nrm[j],alpha=input$alpha1_nrm,delta1=input$delta1_nrm)
+    #     p3num_nrm[j]<-p3fun_nrm(D=D,theta=thetas_nrm[j],alpha=input$alpha2_nrm,delta2=input$delta2_nrm)
+    #     p4num_nrm[j]<-p4fun_nrm(D=D,theta=thetas_nrm[j],alpha=input$alpha3_nrm,delta3=input$delta3_nrm)
+    #     p5num_nrm[j]<-p5fun_nrm(D=D,theta=thetas_nrm[j],alpha=input$alpha4_nrm,delta4=input$delta4_nrm)
+    #   }
+    #   pdenom<-1+p2num_nrm+p3num_nrm+p4num_nrm+p5num_nrm
+    #   p1<-p1num_nrm/pdenom
+    #   p2<-p2num_nrm/pdenom
+    #   p3<-p3num_nrm/pdenom
+    #   p4<-p4num_nrm/pdenom
+    #   p5<-p5num_nrm/pdenom
+    #   graphics::plot(NULL,ylab="P(X=m|theta)",xlab=expression(theta),main="Nominal Response Model",sub="Note: Baker's (1992) reparamterization used.",xlim=c(-6,6),ylim=c(0,1))
+    #   lines(thetas_nrm,p1,type="l",xlim=c(-6,6),col=2)
+    #   lines(thetas_nrm,p2,type="l",xlim=c(-6,6),col=3)
+    #   lines(thetas_nrm,p3,type="l",xlim=c(-6,6),col=4)
+    #   lines(thetas_nrm,p4,type="l",xlim=c(-6,6),col=5)
+    #   lines(thetas_nrm,p5,type="l",xlim=c(-6,6),col=6)
+    #   legend(legend=c("P(X=a|theta)","P(X=b|theta)","P(X=c|theta)","P(X=d|theta)","P(X=e|theta)"),col=2:6,lty=1,"right")
+    # })
     output$nrm_plotly<-renderPlotly({
       D<-switch(input$D_nrm,"1"=1,"2"=1.702)
       p1num_nrm=1
@@ -425,10 +535,10 @@ modelsirt<-function() {
                 data.frame(x=thetas_nrm,y=p5,type="P(X=e|theta)"))
       plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,subtitle=subtitle,
-               xaxis=list(title="θ",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(X=m|theta)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE),
+               xaxis=list(title="θ"),
+               yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_nrm,na.rm=TRUE),xend=max(thetas_nrm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+        add_segments(x=min(thetas_nrm,na.rm=TRUE),xend=max(thetas_nrm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # MULTIDIMENSIONAL DICHOTOMOUS
@@ -522,15 +632,30 @@ modelsirt<-function() {
     ##########################################################################################
     # THURSTONIAN
     ##########################################################################################
+    # output$dichotomous_plot<-renderPlot({
+    #   eta<-seq(-input$pn_eta,input$pn_eta,0.001)
+    #   result<-icc_cfa_thurstonian(eta=eta,gamma=input$pn_gamma,lambda=input$pn_lambda,psi=input$pn_psi)
+    #   plot(eta,result,ylab=expression(P(eta)),xlab=expression(eta),main="",ylim=c(0,1))
+    # })
+    # output$dichotomous_plot1<-renderPlot({
+    #   eta<-seq(-input$pn_eta_ab,input$pn_eta_ab,0.001)
+    #   result<-icc_cfa_thurstonian_bf(eta=eta,gamma=input$pn_gamma_l,lambda_i=input$pn_lambda_i,lambda_k=input$pn_lambda_k,psi_i=input$pn_psi_i,psi_k=input$pn_psi_k)
+    #   plot(eta,result,ylab=expression(P(eta)),xlab=expression(eta),main="",ylim=c(0,1))
+    # })
+    # output$dichotomous_plot2<-renderPlot({
+    #   eta<-seq(-input$pn_eta_abl,input$pn_eta_abl,0.001)
+    #   result<-icc_cfa_thurstonian_l(eta=eta,alpha=input$pn_alpha,beta_i=input$pn_beta_i,beta_k=input$pn_beta_k)
+    #   plot(eta,result,ylab=expression(P(eta)),xlab=expression(eta),main="",ylim=c(0,1))
+    # })
     output$dichotomous_plotly<-renderPlotly({
       eta<-seq(-input$pn_eta,input$pn_eta,0.1)
       result<-icc_cfa_thurstonian(eta=eta,gamma=input$pn_gamma,lambda=input$pn_lambda,psi=input$pn_psi)
       df<-data.frame(eta,result)
       plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
         layout(title="",
-               xaxis=list(title="η",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(η)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE))%>%
-        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+               xaxis=list(title="η"),
+               yaxis=list(title="P(η)",range=c(0,1)))%>%
+        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     output$dichotomous_plotly1<-renderPlotly({
       eta<-seq(-input$pn_eta_ab,input$pn_eta_ab,0.1)
@@ -538,9 +663,9 @@ modelsirt<-function() {
       df<-data.frame(eta,result)
       plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
         layout(title="",
-               xaxis=list(title="η",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(η)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE))%>%
-        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+               xaxis=list(title="η"),
+               yaxis=list(title="P(η)",range=c(0,1)))%>%
+        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     output$dichotomous_plotly2<-renderPlotly({
       eta<-seq(-input$pn_eta_abl,input$pn_eta_abl,0.1)
@@ -548,10 +673,13 @@ modelsirt<-function() {
       df<-data.frame(eta,result)
       plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
         layout(title="",
-               xaxis=list(title="η",mirror=TRUE,ticks='outside',showline=TRUE),
-               yaxis=list(title="P(η)",range=c(0,1),mirror=TRUE,ticks='outside',showline=TRUE))%>%
-        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1))
+               xaxis=list(title="η"),
+               yaxis=list(title="P(η)",range=c(0,1)))%>%
+        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
+    ##########################################################################################
+    #
+    ##########################################################################################
   }
   )
 }

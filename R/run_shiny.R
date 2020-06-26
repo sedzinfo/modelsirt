@@ -2,26 +2,17 @@
 # IRT MODELS
 ##########################################################################################
 #' @title IRT models
+#' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput
+#' @importFrom plotly plotlyOutput renderPlotly plot_ly
+#' @importFrom grDevices contourLines
+#' @importFrom graphics abline arrows layout lines
+#' @importFrom stats pnorm
+#' @importFrom utils install.packages
 #' @keywords irt models
 #' @export
 #' @examples
 #' modelsirt()
 modelsirt<-function() {
-  ##########################################################################################
-  # LOAD
-  ##########################################################################################
-  if (!require("plotly")) install.packages("plotly")
-  if (!require("ggplot2")) install.packages("ggplot2")
-  if (!require("shinythemes")) install.packages("shinythemes")
-  if (!require("fGarch")) install.packages("fGarch")
-  if (!require("shinydashboard")) install.packages("shinydashboard")
-  if (!require("shiny")) install.packages("shiny")
-  library(shinythemes)
-  library(plotly)
-  library(ggplot2)
-  require(shinydashboard)
-  require(fGarch)
-  library(MASS)
   ##########################################################################################
   # RACH
   ##########################################################################################
@@ -167,121 +158,121 @@ modelsirt<-function() {
   icc_cfa_thurstonian_l<-function(eta,alpha,beta_i,beta_k) {
     return(pnorm(alpha+(beta_i-beta_k)*eta))
   }
-  shinyApp(ui=tagList(navbarPage("IRT Models using IRTDemo",
-                                 ##########################################################################################
-                                 # RACH
-                                 ##########################################################################################
-                                 tabPanel("Rasch-4PL",titlePanel(h4("by Metin Bulus")),
-                                          sidebarPanel(selectInput("D_rach",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
-                                                       sliderInput("alpha_rach",label="Discrimination (a)",min=-10,max=10,value=1,step=.1),
-                                                       sliderInput("delta_rach",label="Difficulty (b)",min=-10,max=10,value=0,step=.1),
-                                                       sliderInput("la_rach",label="Guessing (c)",min=0,max=1,value=0,step=.01),
-                                                       sliderInput("ua_rach",label="Inattentiveness (d)",min=0,max=1,value=1,step=.01),
-                                                       selectInput("modprob_rach",label="Modeled Probability",list("P(X=1|theta)"=1,"P(X|theta)"=2),selected=2),
-                                                       textOutput(outputId="feedback")),
-                                          mainPanel(#plotOutput(outputId="dich_plot",width="100%"),
-                                            plotlyOutput(outputId="rach_dichotomous_plotly",width="100%",height="700px")
-                                          )),
-                                 ##########################################################################################
-                                 # PARTIAL CREDIT
-                                 ##########################################################################################
-                                 tabPanel("PCM-GPCM",titlePanel(h4("by Metin Bulus")),
-                                          sidebarPanel(selectInput("D_pcm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
-                                                       sliderInput("alpha_pcm",label="Discrimination",min=-10,max=10,value=1,step=.5),
-                                                       sliderInput("delta1_pcm",label="Step parameter 1",min=-10,max=10,value=-2,step=.1),
-                                                       sliderInput("delta2_pcm",label="Step parameter 2",min=-10,max=10,value=-0.75,step=.1),
-                                                       sliderInput("delta3_pcm",label="Step parameter 3",min=-10,max=10,value=0.75,step=.1),
-                                                       sliderInput("delta4_pcm",label="Step parameter 4",min=-10,max=10,value=2,step=.1)),
-                                          mainPanel(#plotOutput(outputId="gpcm_plot",width="100%"),
-                                            plotlyOutput(outputId="gpcm_plotly",width="100%",height="700px"))),
-                                 ##########################################################################################
-                                 # GRADED RESPONSE
-                                 ##########################################################################################
-                                 tabPanel("GRM",titlePanel(h4("Unknown Contributor")),
-                                          sidebarPanel(selectInput("D_grm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
-                                                       sliderInput("alpha_grm",label="Discrimination",min=-10,max=10,value=1.5,step=.1),
-                                                       sliderInput("delta1_grm",label="Difficulty 1",min=-2.5,max=-1.5,value=-2,step=.1),
-                                                       sliderInput("delta2_grm",label="Difficulty 2",min=-1.25,max=-0.25,value=-0.75,step=.1),
-                                                       sliderInput("delta3_grm",label="Difficulty 3",min=0,max=1.25,value=0.75,step=.1),
-                                                       sliderInput("delta4_grm",label="Difficulty 4",min=1.5,max=2.5,value=2,step=.1)),
-                                          mainPanel(#plotOutput(outputId="grm_plot",width="100%"),
-                                            plotlyOutput(outputId="grm_plotly",width="100%",height="700px"))),
-                                 ##########################################################################################
-                                 # RATING SCALE
-                                 ##########################################################################################
-                                 tabPanel("RSM-GRSM",titlePanel(h4("by Metin Bulus")),
-                                          sidebarPanel(selectInput("D_rsm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
-                                                       sliderInput("alpha_rsm",label="Discrimination",min=-10,max=10,value=1,step=.1),
-                                                       sliderInput("delta_rsm",label="Difficulty",min=-10,max=10,value=0,step=.1),
-                                                       sliderInput("tau1_rsm",label="Threshold 1",min=-10,max=10,value=-1,step=.1),
-                                                       sliderInput("tau2_rsm",label="Threshold 2",min=-10,max=10,value=-0.4,step=.1),
-                                                       sliderInput("tau3_rsm",label="Threshold 3",min=-10,max=10,value=0.4,step=.1),
-                                                       sliderInput("tau4_rsm",label="Threshold 4",min=-10,max=10,value=1,step=.1)),
-                                          mainPanel(#plotOutput(outputId="grsm_plot",width="100%"),
-                                            plotlyOutput(outputId="grsm_plotly",width="100%",height="700px"))),
-                                 ##########################################################################################
-                                 # NOMINAL RESPONSE
-                                 ##########################################################################################
-                                 tabPanel("NRM",titlePanel(h4("Unknown Contributor")),
-                                          sidebarPanel(selectInput("D_nrm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
-                                                       sliderInput("alpha1_nrm",label="Discrimination 1",min=-10,max=10,value=-4,step=.1),
-                                                       sliderInput("alpha2_nrm",label="Discrimination 2",min=-10,max=10,value=-2,step=.1),
-                                                       sliderInput("alpha3_nrm",label="Discrimination 3",min=-10,max=10,value=2,step=.1),
-                                                       sliderInput("alpha4_nrm",label="Discrimination 4",min=-10,max=10,value=4,step=.1),
-                                                       sliderInput("delta1_nrm",label="Difficulty 1",min=-10,max=10,value=-4,step=.1),
-                                                       sliderInput("delta2_nrm",label="Difficulty 2",min=-10,max=10,value=-2,step=.1),
-                                                       sliderInput("delta3_nrm",label="Difficulty 3",min=-10,max=10,value=2,step=.1),
-                                                       sliderInput("delta4_nrm",label="Difficulty 4",min=-10,max=10,value=4,step=.1)),
-                                          mainPanel(#plotOutput(outputId="nrm_plot",width="100%"),
-                                            plotlyOutput(outputId="nrm_plotly",width="100%",height="700px"))),
-                                 ##########################################################################################
-                                 # THURSTONIAN
-                                 ##########################################################################################
-                                 tabPanel("TIRT",
-                                          tabsetPanel(tabPanel(withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma_l+\\lambda_l\\eta}{\\sqrt{\\psi^2_l}}\\right]$$'),
-                                                               sidebarPanel(sliderInput("pn_gamma",label=withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
-                                                                            sliderInput("pn_lambda",label=withMathJax('$$\\lambda$$'),min=-10,max=10,value=.5,step=.1),
-                                                                            sliderInput("pn_eta",label=withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1),
-                                                                            sliderInput("pn_psi",label=withMathJax('$$\\psi$$'),min=0,max=10,value=.5,step=.1)),
-                                                               mainPanel(#plotOutput(outputId="dichotomous_plot",width="100%"),
-                                                                 plotlyOutput(outputId="dichotomous_plotly",width="100%",height="700px"))),
-                                                      tabPanel(withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma+\\lambda_l\\eta_α-\\lambda_k\\eta_b}{\\sqrt{\\psi^2_i+\\psi^2_k}}\\right]$$'),
-                                                               sidebarPanel(sliderInput("pn_gamma_l",label=withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
-                                                                            sliderInput("pn_lambda_i",label=withMathJax('$$\\lambda_i$$'),min=-10,max=10,value=.5,step=.1),
-                                                                            sliderInput("pn_lambda_k",label=withMathJax('$$\\lambda_k$$'),min=-10,max=10,value=0,step=.1),
-                                                                            sliderInput("pn_eta_ab",label=withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1),
-                                                                            sliderInput("pn_psi_i",label=withMathJax('$$\\psi_i$$'),min=0,max=10,value=.5,step=.1),
-                                                                            sliderInput("pn_psi_k",label=withMathJax('$$\\psi_k$$'),min=0,max=10,value=.5,step=.1)),
-                                                               mainPanel(#plotOutput(outputId="dichotomous_plot1",width="100%"),
-                                                                 plotlyOutput(outputId="dichotomous_plotly1",width="100%",height="700px"))),
-                                                      tabPanel(withMathJax('$$\\phi\\,\\left(\\alpha+\\left(\\beta_i-\\beta_k\\right)\\eta\\right)$$'),
-                                                               sidebarPanel(sliderInput("pn_alpha",label=withMathJax('$$\\alpha$$'),min=-10,max=10,value=0,step=.1),
-                                                                            sliderInput("pn_beta_i",label=withMathJax('$$\\beta_i$$'),min=-10,max=10,value=.5,step=.1),
-                                                                            sliderInput("pn_beta_k",label=withMathJax('$$\\beta_k$$'),min=-10,max=10,value=0,step=.1),
-                                                                            sliderInput("pn_eta_abl",label=withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1)),
-                                                               mainPanel(#plotOutput(outputId="dichotomous_plot2",width="100%"),
-                                                                 plotlyOutput(outputId="dichotomous_plotly2",width="100%",height="700px"))))),
-                                 ##########################################################################################
-                                 # MULTIDIMENSIONAL DICHOTOMOUS
-                                 ##########################################################################################
-                                 tabPanel("MIRT Dichotomous",titlePanel(h4("Unknown Contributor")),
-                                          sidebarPanel(width=3,selectInput("D_mdm",label="Item Response Function",list("Normal Ogive"=1,"Logistic"=2),selected=2),
-                                                       selectInput("comp_mdm",label="Compensatory",list("Yes"=1,"No"=2),selected=1),
-                                                       sliderInput("delta1_mdm",label="Location 1",min=-10,max=10,value=0,step=0.1),
-                                                       sliderInput("delta2_mdm",label="Location 2",min=-10,max=10,value=0,step=0.1),
-                                                       sliderInput("alpha1_mdm",label="Discrimination 1",min=-10,max=10,value=1,step=0.1),
-                                                       sliderInput("alpha2_mdm",label="Discrimination 2",min=-10,max=10,value=1,step=0.1),
-                                                       sliderInput("c_mdm",label="Lower Asymptote",min=0,max=.4,value=0,step=0.1),
-                                                       sliderInput("d_mdm",label="Upper Asymptote",min=0,max=1,value=1,step=0.1),
-                                                       textInput("nametheta1_mdm",label="Name Dimension 1","Math"),
-                                                       textInput("nametheta2_mdm",label="Name Dimension 2","Reading")),
-                                          mainPanel(tabsetPanel(tabPanel("Item Response Surface",
-                                                                         mainPanel(plotlyOutput(outputId="plotplotly",width="100%",height="800px"))),
-                                                                tabPanel("Contour Plot",inputPanel(
-                                                                  sliderInput("nlevels_mdm",label="N Contour Levels",min=10,max=100,value=10,step=1)),
-                                                                  mainPanel(plotOutput(outputId="plotcont",width="100%",height="700px"))),
-                                                                tabPanel("Information Plot",
-                                                                         mainPanel(plotlyOutput(outputId="infoplotly",width="100%",height="800px"))))))
+  shiny::shinyApp(ui=shiny::tagList(shiny::navbarPage("IRT Models using IRTDemo",
+                                                      ##########################################################################################
+                                                      # RACH
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("Rasch-4PL",shiny::titlePanel(shiny::h4("by Metin Bulus")),
+                                                                      shiny::sidebarPanel(shiny::selectInput("D_rach",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
+                                                                                          shiny::sliderInput("alpha_rach",label="Discrimination (a)",min=-10,max=10,value=1,step=.1),
+                                                                                          shiny::sliderInput("delta_rach",label="Difficulty (b)",min=-10,max=10,value=0,step=.1),
+                                                                                          shiny::sliderInput("la_rach",label="Guessing (c)",min=0,max=1,value=0,step=.01),
+                                                                                          shiny::sliderInput("ua_rach",label="Inattentiveness (d)",min=0,max=1,value=1,step=.01),
+                                                                                          shiny::selectInput("modprob_rach",label="Modeled Probability",list("P(X=1|theta)"=1,"P(X|theta)"=2),selected=2),
+                                                                                          shiny::textOutput(outputId="feedback")),
+                                                                      shiny::mainPanel(#shiny::plotOutput(outputId="dich_plot",width="100%"),
+                                                                        plotly::plotlyOutput(outputId="rach_dichotomous_plotly",width="100%",height="700px")
+                                                                      )),
+                                                      ##########################################################################################
+                                                      # PARTIAL CREDIT
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("PCM-GPCM",shiny::titlePanel(shiny::h4("by Metin Bulus")),
+                                                                      shiny::sidebarPanel(shiny::selectInput("D_pcm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
+                                                                                          shiny::sliderInput("alpha_pcm",label="Discrimination",min=-10,max=10,value=1,step=.5),
+                                                                                          shiny::sliderInput("delta1_pcm",label="Step parameter 1",min=-10,max=10,value=-2,step=.1),
+                                                                                          shiny::sliderInput("delta2_pcm",label="Step parameter 2",min=-10,max=10,value=-0.75,step=.1),
+                                                                                          shiny::sliderInput("delta3_pcm",label="Step parameter 3",min=-10,max=10,value=0.75,step=.1),
+                                                                                          shiny::sliderInput("delta4_pcm",label="Step parameter 4",min=-10,max=10,value=2,step=.1)),
+                                                                      shiny::mainPanel(#shiny::plotOutput(outputId="gpcm_plot",width="100%"),
+                                                                        plotly::plotlyOutput(outputId="gpcm_plotly",width="100%",height="700px"))),
+                                                      ##########################################################################################
+                                                      # GRADED RESPONSE
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("GRM",shiny::titlePanel(shiny::h4("Unknown Contributor")),
+                                                                      shiny::sidebarPanel(shiny::selectInput("D_grm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
+                                                                                          shiny::sliderInput("alpha_grm",label="Discrimination",min=-10,max=10,value=1.5,step=.1),
+                                                                                          shiny::sliderInput("delta1_grm",label="Difficulty 1",min=-2.5,max=-1.5,value=-2,step=.1),
+                                                                                          shiny::sliderInput("delta2_grm",label="Difficulty 2",min=-1.25,max=-0.25,value=-0.75,step=.1),
+                                                                                          shiny::sliderInput("delta3_grm",label="Difficulty 3",min=0,max=1.25,value=0.75,step=.1),
+                                                                                          shiny::sliderInput("delta4_grm",label="Difficulty 4",min=1.5,max=2.5,value=2,step=.1)),
+                                                                      shiny::mainPanel(#shiny::plotOutput(outputId="grm_plot",width="100%"),
+                                                                        plotly::plotlyOutput(outputId="grm_plotly",width="100%",height="700px"))),
+                                                      ##########################################################################################
+                                                      # RATING SCALE
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("RSM-GRSM",shiny::titlePanel(shiny::h4("by Metin Bulus")),
+                                                                      shiny::sidebarPanel(shiny::selectInput("D_rsm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
+                                                                                          shiny::sliderInput("alpha_rsm",label="Discrimination",min=-10,max=10,value=1,step=.1),
+                                                                                          shiny::sliderInput("delta_rsm",label="Difficulty",min=-10,max=10,value=0,step=.1),
+                                                                                          shiny::sliderInput("tau1_rsm",label="Threshold 1",min=-10,max=10,value=-1,step=.1),
+                                                                                          shiny::sliderInput("tau2_rsm",label="Threshold 2",min=-10,max=10,value=-0.4,step=.1),
+                                                                                          shiny::sliderInput("tau3_rsm",label="Threshold 3",min=-10,max=10,value=0.4,step=.1),
+                                                                                          shiny::sliderInput("tau4_rsm",label="Threshold 4",min=-10,max=10,value=1,step=.1)),
+                                                                      shiny::mainPanel(#shiny::plotOutput(outputId="grsm_plot",width="100%"),
+                                                                        plotly::plotlyOutput(outputId="grsm_plotly",width="100%",height="700px"))),
+                                                      ##########################################################################################
+                                                      # NOMINAL RESPONSE
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("NRM",shiny::titlePanel(shiny::h4("Unknown Contributor")),
+                                                                      shiny::sidebarPanel(shiny::selectInput("D_nrm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
+                                                                                          shiny::sliderInput("alpha1_nrm",label="Discrimination 1",min=-10,max=10,value=-4,step=.1),
+                                                                                          shiny::sliderInput("alpha2_nrm",label="Discrimination 2",min=-10,max=10,value=-2,step=.1),
+                                                                                          shiny::sliderInput("alpha3_nrm",label="Discrimination 3",min=-10,max=10,value=2,step=.1),
+                                                                                          shiny::sliderInput("alpha4_nrm",label="Discrimination 4",min=-10,max=10,value=4,step=.1),
+                                                                                          shiny::sliderInput("delta1_nrm",label="Difficulty 1",min=-10,max=10,value=-4,step=.1),
+                                                                                          shiny::sliderInput("delta2_nrm",label="Difficulty 2",min=-10,max=10,value=-2,step=.1),
+                                                                                          shiny::sliderInput("delta3_nrm",label="Difficulty 3",min=-10,max=10,value=2,step=.1),
+                                                                                          shiny::sliderInput("delta4_nrm",label="Difficulty 4",min=-10,max=10,value=4,step=.1)),
+                                                                      shiny::mainPanel(#shiny::plotOutput(outputId="nrm_plot",width="100%"),
+                                                                        plotly::plotlyOutput(outputId="nrm_plotly",width="100%",height="700px"))),
+                                                      ##########################################################################################
+                                                      # THURSTONIAN
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("TIRT",
+                                                                      shiny::tabsetPanel(shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma_l+\\lambda_l\\eta}{\\sqrt{\\psi^2_l}}\\right]$$'),
+                                                                                                  shiny::sidebarPanel(shiny::sliderInput("pn_gamma",label=shiny::withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
+                                                                                                                      shiny::sliderInput("pn_lambda",label=shiny::withMathJax('$$\\lambda$$'),min=-10,max=10,value=.5,step=.1),
+                                                                                                                      shiny::sliderInput("pn_eta",label=shiny::withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1),
+                                                                                                                      shiny::sliderInput("pn_psi",label=shiny::withMathJax('$$\\psi$$'),min=0,max=10,value=.5,step=.1)),
+                                                                                                  shiny::mainPanel(#shiny::plotOutput(outputId="dichotomous_plot",width="100%"),
+                                                                                                    plotly::plotlyOutput(outputId="dichotomous_plotly",width="100%",height="700px"))),
+                                                                                         shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma+\\lambda_l\\eta_α-\\lambda_k\\eta_b}{\\sqrt{\\psi^2_i+\\psi^2_k}}\\right]$$'),
+                                                                                                         shiny::sidebarPanel(shiny::sliderInput("pn_gamma_l",label=shiny::withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
+                                                                                                                             shiny::sliderInput("pn_lambda_i",label=shiny::withMathJax('$$\\lambda_i$$'),min=-10,max=10,value=.5,step=.1),
+                                                                                                                             shiny::sliderInput("pn_lambda_k",label=shiny::withMathJax('$$\\lambda_k$$'),min=-10,max=10,value=0,step=.1),
+                                                                                                                             shiny::sliderInput("pn_eta_ab",label=shiny::withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1),
+                                                                                                                             shiny::sliderInput("pn_psi_i",label=shiny::withMathJax('$$\\psi_i$$'),min=0,max=10,value=.5,step=.1),
+                                                                                                                             shiny::sliderInput("pn_psi_k",label=shiny::withMathJax('$$\\psi_k$$'),min=0,max=10,value=.5,step=.1)),
+                                                                                                         shiny::mainPanel(#shiny::plotOutput(outputId="dichotomous_plot1",width="100%"),
+                                                                                                           plotly::plotlyOutput(outputId="dichotomous_plotly1",width="100%",height="700px"))),
+                                                                                         shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left(\\alpha+\\left(\\beta_i-\\beta_k\\right)\\eta\\right)$$'),
+                                                                                                         shiny::sidebarPanel(shiny::sliderInput("pn_alpha",label=shiny::withMathJax('$$\\alpha$$'),min=-10,max=10,value=0,step=.1),
+                                                                                                                             shiny::sliderInput("pn_beta_i",label=shiny::withMathJax('$$\\beta_i$$'),min=-10,max=10,value=.5,step=.1),
+                                                                                                                             shiny::sliderInput("pn_beta_k",label=shiny::withMathJax('$$\\beta_k$$'),min=-10,max=10,value=0,step=.1),
+                                                                                                                             shiny::sliderInput("pn_eta_abl",label=shiny::withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1)),
+                                                                                                         shiny::mainPanel(#shiny::plotOutput(outputId="dichotomous_plot2",width="100%"),
+                                                                                                           plotly::plotlyOutput(outputId="dichotomous_plotly2",width="100%",height="700px"))))),
+                                                      ##########################################################################################
+                                                      # MULTIDIMENSIONAL DICHOTOMOUS
+                                                      ##########################################################################################
+                                                      shiny::tabPanel("MIRT Dichotomous",shiny::titlePanel(shiny::h4("Unknown Contributor")),
+                                                                      shiny::sidebarPanel(width=3,shiny::selectInput("D_mdm",label="Item Response Function",list("Normal Ogive"=1,"Logistic"=2),selected=2),
+                                                                                          shiny::selectInput("comp_mdm",label="Compensatory",list("Yes"=1,"No"=2),selected=1),
+                                                                                          shiny::sliderInput("delta1_mdm",label="Location 1",min=-10,max=10,value=0,step=0.1),
+                                                                                          shiny::sliderInput("delta2_mdm",label="Location 2",min=-10,max=10,value=0,step=0.1),
+                                                                                          shiny::sliderInput("alpha1_mdm",label="Discrimination 1",min=-10,max=10,value=1,step=0.1),
+                                                                                          shiny::sliderInput("alpha2_mdm",label="Discrimination 2",min=-10,max=10,value=1,step=0.1),
+                                                                                          shiny::sliderInput("c_mdm",label="Lower Asymptote",min=0,max=.4,value=0,step=0.1),
+                                                                                          shiny::sliderInput("d_mdm",label="Upper Asymptote",min=0,max=1,value=1,step=0.1),
+                                                                                          shiny::textInput("nametheta1_mdm",label="Name Dimension 1","Math"),
+                                                                                          shiny::textInput("nametheta2_mdm",label="Name Dimension 2","Reading")),
+                                                                      shiny::mainPanel(shiny::tabsetPanel(shiny::tabPanel("Item Response Surface",
+                                                                                                                   shiny::mainPanel(plotly::plotlyOutput(outputId="plotplotly",width="100%",height="800px"))),
+                                                                                                          shiny::tabPanel("Contour Plot",shiny::inputPanel(
+                                                                                                            shiny::sliderInput("nlevels_mdm",label="N Contour Levels",min=10,max=100,value=10,step=1)),
+                                                                                                            shiny::mainPanel(shiny::plotOutput(outputId="plotcont",width="100%",height="700px"))),
+                                                                                                          shiny::tabPanel("Information Plot",
+                                                                                                                   shiny::mainPanel(plotly::plotlyOutput(outputId="infoplotly",width="100%",height="800px"))))))
   )),server=function(input,output){
     ##########################################################################################
     # RACH
@@ -306,7 +297,7 @@ modelsirt<-function() {
     #     legend(legend=c("P(X=1|theta)","P(X=0|theta)"),col=c(1,2),lty=1,"right")
     #   }
     # })
-    output$rach_dichotomous_plotly<-renderPlotly({
+    output$rach_dichotomous_plotly<-plotly::renderPlotly({
       D<-switch(input$D_rach,"1"=1,"2"=1.702)
       for(j in 1:N_rach){ p1_rach[j]<-Pfun_rach(D=D,la=input$la_rach,ua=input$ua_rach,theta=thetas_rach[j],delta=input$delta_rach,alpha=input$alpha_rach) }
       if(input$la_rach==0 & input$ua_rach==1 & input$alpha_rach==1){title<-c("Rasch Model")}
@@ -322,7 +313,7 @@ modelsirt<-function() {
         df<-rbind(data.frame(x=thetas_rach,y=p1_rach,type="P(X=1|theta)"),
                   data.frame(x=thetas_rach,y=1-p1_rach,type="P(X=0|theta)"))
       }
-      plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(x)",range=c(0,1)),
@@ -357,7 +348,7 @@ modelsirt<-function() {
     #   lines(thetas_pcm,p5,type="l",xlim=c(-6,6),col=6)
     #   legend(legend=c("P(X=1|theta)","P(X=2|theta)","P(X=3|theta)","P(X=4|theta)","P(X=5|theta)"),col=2:6,lty=1,"right")
     # })
-    output$gpcm_plotly<-renderPlotly({
+    output$gpcm_plotly<-plotly::renderPlotly({
       D<-switch(input$D_pcm,"1" = 1,"2" = 1.702)
       if(input$alpha_pcm==0){stop("Why would you have an item with 0(zero) discrimination!")}
       p1num_pcm=1
@@ -379,7 +370,7 @@ modelsirt<-function() {
                 data.frame(x=thetas_pcm,y=p3,type="P(X=3|theta)"),
                 data.frame(x=thetas_pcm,y=p4,type="P(X=4|theta)"),
                 data.frame(x=thetas_pcm,y=p5,type="P(X=5|theta)"))
-      plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(x)",range=c(0,1)),
@@ -406,7 +397,7 @@ modelsirt<-function() {
     #   lines(thetas_grm,p[,4]-0,type="l",xlim=c(-6,6),col=6)
     #   legend(legend=c("P(X=1|theta)","P(X=2|theta)","P(X=3|theta)","P(X=4|theta)","P(X=5|theta)"),col=2:6,lty=1,"right")
     # })
-    output$grm_plotly<-renderPlotly({
+    output$grm_plotly<-plotly::renderPlotly({
       D<-switch(input$D_grm,"1"=1,"2"=1.702)
       p<-matrix(NA,nrow=N_grm,4)
       for(j in 1:N_grm){
@@ -421,7 +412,7 @@ modelsirt<-function() {
                 data.frame(x=thetas_grm,y=p[,2]-p[,3],type="P(X=3|theta)"),
                 data.frame(x=thetas_grm,y=p[,3]-p[,4],type="P(X=4|theta)"),
                 data.frame(x=thetas_grm,y=p[,4]-0,type="P(X=5|theta)"))
-      plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(X=m|theta)",range=c(0,1)),
@@ -456,7 +447,7 @@ modelsirt<-function() {
     #   lines(thetas_rsm,p5,type="l",xlim=c(-6,6),col=6)
     #   legend(legend=c("P(X=1|theta)","P(X=2|theta)","P(X=3|theta)","P(X=4|theta)","P(X=5|theta)"),col=2:6,lty=1,"right")
     # })
-    output$grsm_plotly<-renderPlotly({
+    output$grsm_plotly<-plotly::renderPlotly({
       D<-switch(input$D_rsm,"1"=1,"2"=1.702)
       if(input$alpha_rsm==0){stop("Why would you have an item with 0 (zero) discrimination!")}
       p1num_rsm=1
@@ -478,7 +469,7 @@ modelsirt<-function() {
                 data.frame(x=thetas_rsm,y=p3,type="P(X=3|theta)"),
                 data.frame(x=thetas_rsm,y=p4,type="P(X=4|theta)"),
                 data.frame(x=thetas_rsm,y=p5,type="P(X=5|theta)"))
-      plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(X=m|theta)",range=c(0,1)),
@@ -511,7 +502,7 @@ modelsirt<-function() {
     #   lines(thetas_nrm,p5,type="l",xlim=c(-6,6),col=6)
     #   legend(legend=c("P(X=a|theta)","P(X=b|theta)","P(X=c|theta)","P(X=d|theta)","P(X=e|theta)"),col=2:6,lty=1,"right")
     # })
-    output$nrm_plotly<-renderPlotly({
+    output$nrm_plotly<-plotly::renderPlotly({
       D<-switch(input$D_nrm,"1"=1,"2"=1.702)
       p1num_nrm=1
       for(j in 1:N_nrm){
@@ -533,7 +524,7 @@ modelsirt<-function() {
                 data.frame(x=thetas_nrm,y=p3,type="P(X=c|theta)"),
                 data.frame(x=thetas_nrm,y=p4,type="P(X=d|theta)"),
                 data.frame(x=thetas_nrm,y=p5,type="P(X=e|theta)"))
-      plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
         layout(title=title,subtitle=subtitle,
                xaxis=list(title="θ"),
                yaxis=list(title="P(X=m|theta)",range=c(0,1)),
@@ -560,7 +551,7 @@ modelsirt<-function() {
       }
       pjj
     })
-    output$plotplotly<-renderPlotly({
+    output$plotplotly<-plotly::renderPlotly({
       pjj<-pjj()
       p3D<-plotly::plot_ly(x=thetas1,y=thetas2,z=pjj,width=700,height=700,showscale=FALSE) %>%
         layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="P(Y=1)",range=c(0,1)),camera=list(eye=list(x=1.5,y=-1.5,z=1.5)))) %>%
@@ -613,7 +604,7 @@ modelsirt<-function() {
       }
       graphics::persp(thetas1,thetas2,info,theta=input$angleinfo1_mdm,phi=input$angleinfo2_mdm,zlim=c(0,max(info)),xlab=input$nametheta1_mdm,ylab=input$nametheta2_mdm,zlab="Information",nticks=5,ticktype="detailed")
     })
-    output$infoplotly<-renderPlotly({
+    output$infoplotly<-plotly::renderPlotly({
       c<-input$c_mdm
       d<-input$d_mdm
       alpha1<-input$alpha1_mdm
@@ -647,31 +638,31 @@ modelsirt<-function() {
     #   result<-icc_cfa_thurstonian_l(eta=eta,alpha=input$pn_alpha,beta_i=input$pn_beta_i,beta_k=input$pn_beta_k)
     #   plot(eta,result,ylab=expression(P(eta)),xlab=expression(eta),main="",ylim=c(0,1))
     # })
-    output$dichotomous_plotly<-renderPlotly({
+    output$dichotomous_plotly<-plotly::renderPlotly({
       eta<-seq(-input$pn_eta,input$pn_eta,0.1)
       result<-icc_cfa_thurstonian(eta=eta,gamma=input$pn_gamma,lambda=input$pn_lambda,psi=input$pn_psi)
       df<-data.frame(eta,result)
-      plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
         layout(title="",
                xaxis=list(title="η"),
                yaxis=list(title="P(η)",range=c(0,1)))%>%
         add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
-    output$dichotomous_plotly1<-renderPlotly({
+    output$dichotomous_plotly1<-plotly::renderPlotly({
       eta<-seq(-input$pn_eta_ab,input$pn_eta_ab,0.1)
       result<-icc_cfa_thurstonian_bf(eta=eta,gamma=input$pn_gamma_l,lambda_i=input$pn_lambda_i,lambda_k=input$pn_lambda_k,psi_i=input$pn_psi_i,psi_k=input$pn_psi_k)
       df<-data.frame(eta,result)
-      plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
         layout(title="",
                xaxis=list(title="η"),
                yaxis=list(title="P(η)",range=c(0,1)))%>%
         add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
-    output$dichotomous_plotly2<-renderPlotly({
+    output$dichotomous_plotly2<-plotly::renderPlotly({
       eta<-seq(-input$pn_eta_abl,input$pn_eta_abl,0.1)
       result<-icc_cfa_thurstonian_l(eta=eta,alpha=input$pn_alpha,beta_i=input$pn_beta_i,beta_k=input$pn_beta_k)
       df<-data.frame(eta,result)
-      plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
+      plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
         layout(title="",
                xaxis=list(title="η"),
                yaxis=list(title="P(η)",range=c(0,1)))%>%
@@ -683,3 +674,4 @@ modelsirt<-function() {
   }
   )
 }
+

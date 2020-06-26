@@ -6,9 +6,9 @@ Author: Dimitrios Zacharatos [aut,cre]
  		Metin Bulus [aut,cre]
 		Wes Bonifay [aut,cre]
 Maintainer: Dimitrios Zacharatos <dimitrios@psycholate.com>
-Depends: ggplot2
+Depends: plotly, MASS, fGarch, shiny, shinydashboard, shinythemes
 Description: IRT curves with shinyapps.
-License: GPL (>= 2)
+License: GPL (>= 2) + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

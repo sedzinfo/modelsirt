@@ -3,7 +3,7 @@
 ##########################################################################################
 #' @title IRT models
 #' @import magrittr
-#' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput renderText reactive
+#' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput renderText reactive renderPlot
 #' @importFrom plotly plotlyOutput renderPlotly plot_ly add_segments layout
 #' @importFrom grDevices contourLines
 #' @importFrom graphics abline arrows layout lines
@@ -558,7 +558,7 @@ modelsirt<-function() {
         plotly::layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="P(Y=1)",range=c(0,1)),camera=list(eye=list(x=1.5,y=-1.5,z=1.5)))) %>%
         plotly::add_surface(opacity=1)
     })
-    output$plotcont<-renderPlot({
+    output$plotcont<-shiny::renderPlot({
       pjj<-pjj()
       c<-input$c_mdm
       d<-input$d_mdm

@@ -2,8 +2,9 @@
 # IRT MODELS
 ##########################################################################################
 #' @title IRT models
-#' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput
-#' @importFrom plotly plotlyOutput renderPlotly plot_ly
+#' @import magrittr
+#' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput renderText reactive
+#' @importFrom plotly plotlyOutput renderPlotly plot_ly add_segments layout
 #' @importFrom grDevices contourLines
 #' @importFrom graphics abline arrows layout lines
 #' @importFrom stats pnorm
@@ -230,12 +231,12 @@ modelsirt<-function() {
                                                       ##########################################################################################
                                                       shiny::tabPanel("TIRT",
                                                                       shiny::tabsetPanel(shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma_l+\\lambda_l\\eta}{\\sqrt{\\psi^2_l}}\\right]$$'),
-                                                                                                  shiny::sidebarPanel(shiny::sliderInput("pn_gamma",label=shiny::withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
-                                                                                                                      shiny::sliderInput("pn_lambda",label=shiny::withMathJax('$$\\lambda$$'),min=-10,max=10,value=.5,step=.1),
-                                                                                                                      shiny::sliderInput("pn_eta",label=shiny::withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1),
-                                                                                                                      shiny::sliderInput("pn_psi",label=shiny::withMathJax('$$\\psi$$'),min=0,max=10,value=.5,step=.1)),
-                                                                                                  shiny::mainPanel(#shiny::plotOutput(outputId="dichotomous_plot",width="100%"),
-                                                                                                    plotly::plotlyOutput(outputId="dichotomous_plotly",width="100%",height="700px"))),
+                                                                                                         shiny::sidebarPanel(shiny::sliderInput("pn_gamma",label=shiny::withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
+                                                                                                                             shiny::sliderInput("pn_lambda",label=shiny::withMathJax('$$\\lambda$$'),min=-10,max=10,value=.5,step=.1),
+                                                                                                                             shiny::sliderInput("pn_eta",label=shiny::withMathJax('$$\\eta$$'),min=1,max=100,value=6,step=1),
+                                                                                                                             shiny::sliderInput("pn_psi",label=shiny::withMathJax('$$\\psi$$'),min=0,max=10,value=.5,step=.1)),
+                                                                                                         shiny::mainPanel(#shiny::plotOutput(outputId="dichotomous_plot",width="100%"),
+                                                                                                           plotly::plotlyOutput(outputId="dichotomous_plotly",width="100%",height="700px"))),
                                                                                          shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma+\\lambda_l\\eta_α-\\lambda_k\\eta_b}{\\sqrt{\\psi^2_i+\\psi^2_k}}\\right]$$'),
                                                                                                          shiny::sidebarPanel(shiny::sliderInput("pn_gamma_l",label=shiny::withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
                                                                                                                              shiny::sliderInput("pn_lambda_i",label=shiny::withMathJax('$$\\lambda_i$$'),min=-10,max=10,value=.5,step=.1),
@@ -267,12 +268,12 @@ modelsirt<-function() {
                                                                                           shiny::textInput("nametheta1_mdm",label="Name Dimension 1","Math"),
                                                                                           shiny::textInput("nametheta2_mdm",label="Name Dimension 2","Reading")),
                                                                       shiny::mainPanel(shiny::tabsetPanel(shiny::tabPanel("Item Response Surface",
-                                                                                                                   shiny::mainPanel(plotly::plotlyOutput(outputId="plotplotly",width="100%",height="800px"))),
+                                                                                                                          shiny::mainPanel(plotly::plotlyOutput(outputId="plotplotly",width="100%",height="800px"))),
                                                                                                           shiny::tabPanel("Contour Plot",shiny::inputPanel(
                                                                                                             shiny::sliderInput("nlevels_mdm",label="N Contour Levels",min=10,max=100,value=10,step=1)),
                                                                                                             shiny::mainPanel(shiny::plotOutput(outputId="plotcont",width="100%",height="700px"))),
                                                                                                           shiny::tabPanel("Information Plot",
-                                                                                                                   shiny::mainPanel(plotly::plotlyOutput(outputId="infoplotly",width="100%",height="800px"))))))
+                                                                                                                          shiny::mainPanel(plotly::plotlyOutput(outputId="infoplotly",width="100%",height="800px"))))))
   )),server=function(input,output){
     ##########################################################################################
     # RACH
@@ -304,7 +305,7 @@ modelsirt<-function() {
       if(input$la_rach==0 & input$ua_rach==1 & input$alpha_rach!=1){title<-c("1PL or 2PL Model")}
       if(input$ua_rach==1 & input$la_rach!=0){title<-c("3PL Model")}
       if(input$la_rach!=0 & input$ua_rach!=1){title<-c("4PL Model")}
-      output$feedback<-renderText({ifelse(input$ua_rach!=1 & input$la_rach==0,"No such model!",paste(title,": a=",input$alpha_rach," b=",input$delta_rach," c=",input$la_rach," d=",input$ua_rach))})
+      output$feedback<-shiny::renderText({ifelse(input$ua_rach!=1 & input$la_rach==0,"No such model!",paste(title,": a=",input$alpha_rach," b=",input$delta_rach," c=",input$la_rach," d=",input$ua_rach))})
       modprob<-switch(input$modprob_rach,"1"=1,"2"=2)
       if(modprob==1){
         df<-data.frame(x=thetas_rach,y=p1_rach,type="P(X=1|theta)")
@@ -314,11 +315,11 @@ modelsirt<-function() {
                   data.frame(x=thetas_rach,y=1-p1_rach,type="P(X=0|theta)"))
       }
       plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
-        layout(title=title,
-               xaxis=list(title="θ"),
-               yaxis=list(title="P(x)",range=c(0,1)),
-               legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_rach,na.rm=TRUE),xend=max(thetas_rach,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::layout(title=list(text=title),
+                       xaxis=list(title="θ"),
+                       yaxis=list(title="P(x)",range=c(0,1)),
+                       legend=list(x=0,y=.99))%>%
+        plotly::add_segments(x=min(thetas_rach,na.rm=TRUE),xend=max(thetas_rach,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # PARTIAL CREDIT
@@ -371,11 +372,11 @@ modelsirt<-function() {
                 data.frame(x=thetas_pcm,y=p4,type="P(X=4|theta)"),
                 data.frame(x=thetas_pcm,y=p5,type="P(X=5|theta)"))
       plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
-        layout(title=title,
+        plotly::layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(x)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_pcm,na.rm=TRUE),xend=max(thetas_pcm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(thetas_pcm,na.rm=TRUE),xend=max(thetas_pcm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # GRADED RESPONSE
@@ -413,11 +414,11 @@ modelsirt<-function() {
                 data.frame(x=thetas_grm,y=p[,3]-p[,4],type="P(X=4|theta)"),
                 data.frame(x=thetas_grm,y=p[,4]-0,type="P(X=5|theta)"))
       plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
-        layout(title=title,
+        plotly::layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_grm,na.rm=TRUE),xend=max(thetas_grm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(thetas_grm,na.rm=TRUE),xend=max(thetas_grm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # RATING SCALE
@@ -470,11 +471,11 @@ modelsirt<-function() {
                 data.frame(x=thetas_rsm,y=p4,type="P(X=4|theta)"),
                 data.frame(x=thetas_rsm,y=p5,type="P(X=5|theta)"))
       plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
-        layout(title=title,
+        plotly::layout(title=title,
                xaxis=list(title="θ"),
                yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_rsm,na.rm=TRUE),xend=max(thetas_rsm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(thetas_rsm,na.rm=TRUE),xend=max(thetas_rsm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # NOMINAL RESPONSE
@@ -525,11 +526,11 @@ modelsirt<-function() {
                 data.frame(x=thetas_nrm,y=p4,type="P(X=d|theta)"),
                 data.frame(x=thetas_nrm,y=p5,type="P(X=e|theta)"))
       plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
-        layout(title=title,subtitle=subtitle,
+        plotly::layout(title=title,subtitle=subtitle,
                xaxis=list(title="θ"),
                yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                legend=list(x=0,y=.99))%>%
-        add_segments(x=min(thetas_nrm,na.rm=TRUE),xend=max(thetas_nrm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(thetas_nrm,na.rm=TRUE),xend=max(thetas_nrm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     # MULTIDIMENSIONAL DICHOTOMOUS
@@ -554,8 +555,8 @@ modelsirt<-function() {
     output$plotplotly<-plotly::renderPlotly({
       pjj<-pjj()
       p3D<-plotly::plot_ly(x=thetas1,y=thetas2,z=pjj,width=700,height=700,showscale=FALSE) %>%
-        layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="P(Y=1)",range=c(0,1)),camera=list(eye=list(x=1.5,y=-1.5,z=1.5)))) %>%
-        add_surface(opacity=1)
+        plotly::layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="P(Y=1)",range=c(0,1)),camera=list(eye=list(x=1.5,y=-1.5,z=1.5)))) %>%
+        plotly::add_surface(opacity=1)
     })
     output$plotcont<-renderPlot({
       pjj<-pjj()
@@ -617,8 +618,8 @@ modelsirt<-function() {
         }
       }
       plotly::plot_ly(x=thetas1,y=thetas2,z=info,width=700,height=700,showscale=FALSE) %>%
-        layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="Information"),camera=list(eye=list(x=-1.5,y=1.5,z=1.5)))) %>%
-        add_surface(opacity=1)
+        plotly::layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="Information"),camera=list(eye=list(x=-1.5,y=1.5,z=1.5)))) %>%
+        plotly::add_surface(opacity=1)
     })
     ##########################################################################################
     # THURSTONIAN
@@ -643,30 +644,30 @@ modelsirt<-function() {
       result<-icc_cfa_thurstonian(eta=eta,gamma=input$pn_gamma,lambda=input$pn_lambda,psi=input$pn_psi)
       df<-data.frame(eta,result)
       plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
-        layout(title="",
+        plotly::layout(title="",
                xaxis=list(title="η"),
                yaxis=list(title="P(η)",range=c(0,1)))%>%
-        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     output$dichotomous_plotly1<-plotly::renderPlotly({
       eta<-seq(-input$pn_eta_ab,input$pn_eta_ab,0.1)
       result<-icc_cfa_thurstonian_bf(eta=eta,gamma=input$pn_gamma_l,lambda_i=input$pn_lambda_i,lambda_k=input$pn_lambda_k,psi_i=input$pn_psi_i,psi_k=input$pn_psi_k)
       df<-data.frame(eta,result)
       plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
-        layout(title="",
+        plotly::layout(title="",
                xaxis=list(title="η"),
                yaxis=list(title="P(η)",range=c(0,1)))%>%
-        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     output$dichotomous_plotly2<-plotly::renderPlotly({
       eta<-seq(-input$pn_eta_abl,input$pn_eta_abl,0.1)
       result<-icc_cfa_thurstonian_l(eta=eta,alpha=input$pn_alpha,beta_i=input$pn_beta_i,beta_k=input$pn_beta_k)
       df<-data.frame(eta,result)
       plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
-        layout(title="",
+        plotly::layout(title="",
                xaxis=list(title="η"),
                yaxis=list(title="P(η)",range=c(0,1)))%>%
-        add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
+        plotly::add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
     })
     ##########################################################################################
     #

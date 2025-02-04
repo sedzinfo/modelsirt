@@ -6,8 +6,8 @@
 # R CMD build modelsirt --resave-data
 library(devtools)
 library(roxygen2)
-setwd("/mnt/WDRED_REMOTE/repositories/modelsirt/")
-setwd("/mnt/WD500/public_rstatistics/")
+directory<-paste0(dirname(rstudioapi::getActiveDocumentContext()$path),"/")
+setwd(directory)
 # usethis::create_package("modelsirt")
 document()
 install()

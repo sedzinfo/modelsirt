@@ -27,3 +27,9 @@ modelsirt()
 
 
 ![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt1.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt2.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt3.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt4.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt5.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt6.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt7.png)

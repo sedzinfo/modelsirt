@@ -25,6 +25,7 @@ library(modelsirt)
 modelsirt()
 ```
 
+# Screenshots
 
 ![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt1.png)
 ![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt2.png)

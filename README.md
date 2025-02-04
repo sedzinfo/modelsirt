@@ -7,15 +7,20 @@ This function now uses plotly.
 Thurstonian IRT curves were added with the help of Kostas Maistrelis.
 
 # Installation Instructions
+## install R
+installation instructions can be found here: https://cran.r-project.org/  
+## install RStudio IDE (optional but a good idea)  
+installation instructions can be found here: https://posit.co/downloads/  
 
+open RStudio and type in the console:
+```
 install.packages("devtools")
-
 library(devtools)
-
 install_github("sedzinfo/modelsirt")
+```
 
 # Usage
-
+```
 library(modelsirt)
-
 modelsirt()
+```

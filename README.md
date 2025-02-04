@@ -26,4 +26,4 @@ modelsirt()
 ```
 
 
-![Alt text](https://github.com/sedzinfo/modelsirt/blob/main/images/modelsirt1.png)
+![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt1.png)

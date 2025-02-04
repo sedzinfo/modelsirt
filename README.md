@@ -24,3 +24,6 @@ install_github("sedzinfo/modelsirt")
 library(modelsirt)
 modelsirt()
 ```
+
+
+![Alt text](https://github.com/sedzinfo/modelsirt/blob/main/images/modelsirt1.png)

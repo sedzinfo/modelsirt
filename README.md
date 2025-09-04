@@ -34,3 +34,16 @@ modelsirt()
 ![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt5.png)
 ![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt6.png)
 ![Alt text](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt7.png)
+
+---
+
+![Stars](https://img.shields.io/github/stars/sedzinfo/modelsirt)
+![Watchers](https://img.shields.io/github/watchers/sedzinfo/modelsirt)
+![Repo Size](https://img.shields.io/github/repo-size/sedzinfo/modelsirt)
+![Open Issues](https://img.shields.io/github/issues/sedzinfo/modelsirt)
+![Forks](https://img.shields.io/github/forks/sedzinfo/modelsirt)
+![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/modelsirt)
+![Contributors](https://img.shields.io/github/contributors/sedzinfo/modelsirt)
+![License](https://img.shields.io/github/license/sedzinfo/modelsirt)
+![Release](https://img.shields.io/github/v/release/sedzinfo/modelsirt)
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/modelsirt/main.yml)

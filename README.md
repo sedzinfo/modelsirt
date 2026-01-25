@@ -120,13 +120,13 @@ modelsirt()
 ### Rasch 1PL 2PL 3PL 4PL Model
 ![Rasch Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt1.png)
 
-### Partial Credit Model
+### Partial Credit Model Generalized Partial Credit Model
 ![2PL Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt2.png)
 
 ### Graded Response Model
 ![3PL Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt3.png)
 
-### Rating Scale Model
+### Rating Scale Model Generalized Rating Scale Model
 ![Graded Response Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt4.png)
 
 ### Nominal Response Model
@@ -208,5 +208,6 @@ For those interested in learning more about IRT:
 ![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/modelsirt)
 ![Contributors](https://img.shields.io/github/contributors/sedzinfo/modelsirt)
 ![License](https://img.shields.io/github/license/sedzinfo/modelsirt)
-![Release](https://img.shields.io/github/v/release/sedzinfo/modelsirt)
-![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/modelsirt/main.yml)
+<!--![Release](https://img.shields.io/github/v/release/sedzinfo/modelsirt)-->
+<!--![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/modelsirt/main.yml)-->
+

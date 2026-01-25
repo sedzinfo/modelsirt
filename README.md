@@ -117,25 +117,25 @@ modelsirt()
 
 ## Screenshots
 
-### Rasch Model
+### Rasch 1PL 2PL 3PL 4PL Model
 ![Rasch Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt1.png)
 
-### 2PL Model
+### Partial Credit Model
 ![2PL Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt2.png)
 
-### 3PL Model
+### Graded Response Model
 ![3PL Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt3.png)
 
-### Graded Response Model
+### Rating Scale Model
 ![Graded Response Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt4.png)
 
-### Partial Credit Model
+### Nominal Response Model
 ![Partial Credit Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt5.png)
 
-### Rating Scale Model
+### TIRT Model
 ![Rating Scale Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt6.png)
 
-### Nominal Response Model
+### Multidimensional Models
 ![Nominal Response Model](https://raw.githubusercontent.com/sedzinfo/modelsirt/refs/heads/master/images/modelsirt7.png)
 
 ## Use Cases

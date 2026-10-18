@@ -254,9 +254,9 @@
 #'     equal probability, each labelled with its probability; a slider sets the approximate
 #'     number of contour levels (10 to 100, default 10). Black lines mark
 #'     \eqn{\theta_1 = 0}{theta1 = 0} and \eqn{\theta_2 = 0}{theta2 = 0}. A thick line marks
-#'     the contour halfway between the asymptotes: 0.5 when \eqn{c = 0} and \eqn{d = 1},
-#'     \eqn{(c + 1) / 2} when \eqn{c > 0} and \eqn{d = 1}, and \eqn{(c + d) / 2} when
-#'     \eqn{c > 0} and \eqn{d < 1} (no thick line is drawn when \eqn{c = 0} and \eqn{d < 1}).
+#'     the contour halfway between the asymptotes, at probability \eqn{(c + d) / 2} (0.5 when
+#'     \eqn{c = 0} and \eqn{d = 1}); it is left out when that probability is not reached inside
+#'     the grid, as for a very easy or very hard item.
 #'     For the compensatory model a blue arrow shows the item vector. It starts on the line
 #'     where the probability is halfway between the asymptotes, at the point of that line
 #'     closest to the origin; it points in the direction in which the probability rises
@@ -774,18 +774,9 @@ modelsirt<-function() {
         Di<--gamma/Ai
         graphics::contour(thetas1,thetas2,pjj,nlevels=input$nlevels_mdm,xlab=axis_title(input$nametheta1_mdm,"\u{03b8}1"),ylab=axis_title(input$nametheta2_mdm,"\u{03b8}2"))
         abline(h=0,v=0)
-        if(c==0 & d==1){
-          cont<-contourLines(thetas1,thetas2,pjj,levels=0.5)
-          lines(cont[[1]]$x,cont[[1]]$y,lwd=2)
-        }
-        if(c>0 & d==1){
-          cont<-contourLines(thetas1,thetas2,pjj,levels=(c+1)/2)
-          lines(cont[[1]]$x,cont[[1]]$y,lwd=2)
-        }
-        if(c>0 & d<1){
-          cont<-contourLines(thetas1,thetas2,pjj,levels=(c+d)/2)
-          lines(cont[[1]]$x,cont[[1]]$y,lwd=2)
-        }
+        # thick line where the probability is halfway between the asymptotes, (c + d) / 2 (0.5 when c = 0 and d = 1);
+        # every piece is drawn, and none when that probability is not reached inside the grid
+        for(cont in contourLines(thetas1,thetas2,pjj,levels=(c+d)/2)){ lines(cont$x,cont$y,lwd=2) }
         comp<-switch(input$comp_mdm,"1"=1,"2"=2)
         if(comp==1){
           if(alpha2>0){ arrows(Di*cos(omega1),Di*sin(omega1),x1=(Di+Ai)*cos(omega1),y1=(Di+Ai)*sin(omega1),code=2,length=0.1,col="blue") }

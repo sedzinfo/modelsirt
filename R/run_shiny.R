@@ -266,9 +266,15 @@
 #'     signed distance \eqn{(a_1 \delta_1 + a_2 \delta_2) / A}{(a_1 * delta_1 + a_2 * delta_2) / A},
 #'     the multidimensional difficulty, from the origin along the direction of the arrow.
 #'   \item \strong{Information Plot sub-tab:} a 3-D surface, seen from the opposite corner, of
-#'     the item information at each point of the grid, computed for both models from the
-#'     probability \eqn{P} at that point as
-#'     \deqn{I(\theta_1, \theta_2) = A^2 \frac{(P - c)^2 (d - P)^2}{(d - c)^2} \cdot \frac{1 - P}{P}.}{I(theta1, theta2) = A^2 * (P - c)^2 * (d - P)^2 / (d - c)^2 * (1 - P) / P.}
+#'     the item information at each point of the grid: the squared slope of the probability
+#'     surface, in the direction in which it rises fastest, divided by \eqn{P (1 - P)},
+#'     \deqn{I(\theta_1, \theta_2) = \frac{(\partial P / \partial \theta_1)^2 + (\partial P / \partial \theta_2)^2}{P (1 - P)}.}{I(theta1, theta2) = ((dP/dtheta1)^2 + (dP/dtheta2)^2) / (P * (1 - P)).}
+#'     For the compensatory model this is the information of the four-parameter logistic model
+#'     (Magis, 2013) along the item vector,
+#'     \deqn{I(\theta_1, \theta_2) = \frac{D^2 A^2 (P - c)^2 (d - P)^2}{(d - c)^2 P (1 - P)},}{I(theta1, theta2) = D^2 * A^2 * (P - c)^2 * (d - P)^2 / ((d - c)^2 * P * (1 - P)),}
+#'     which grows with the multidimensional discrimination \eqn{A} and, when \eqn{c = 0} and
+#'     \eqn{d = 1}, is highest along the line where \eqn{P = 0.5}. For the non-compensatory
+#'     model the slope combines the two logistic parts of the model.
 #' }
 #' In the compensatory model the contour lines are straight and parallel, at right angles to
 #' the item vector, because the probability depends only on the weighted sum of the abilities;
@@ -299,6 +305,9 @@
 #'   Applications for Estimation, Scoring, and Multi Dimensionality in Item Response Theory.
 #'   \emph{Anadolu University Journal of Education Faculty}, 6(1), 92-108.
 #'   \doi{10.34056/aujef.913781}
+#'
+#'   Magis, D. (2013). A note on the item information function of the four-parameter logistic
+#'   model. \emph{Applied Psychological Measurement}, 37(4), 304-315.
 #'
 #'   Masters, G. N. (1982). A Rasch model for partial credit scoring. \emph{Psychometrika},
 #'   47(2), 149-174.
@@ -752,6 +761,27 @@ modelsirt<-function() {
         }
         pjj
       })
+      # item information at each grid point: the squared slope of the probability surface, in the direction in which it
+      # rises fastest, divided by P(1-P). For the compensatory model this is the 4PL information along the item vector,
+      # D^2*A^2*(P-c)^2*(d-P)^2/((d-c)^2*P*(1-P)) (Magis, 2013); for the non-compensatory model the slope comes from both logistic parts
+      info<-reactive({
+        pjj<-pjj()
+        D<-switch(input$D_mdm,"1"=1,"2"=1.702)
+        comp<-switch(input$comp_mdm,"1"=1,"2"=2)
+        c<-input$c_mdm
+        d<-input$d_mdm
+        alpha1<-input$alpha1_mdm
+        alpha2<-input$alpha2_mdm
+        if(comp==1){ slope2<-(D^2)*(alpha1^2+alpha2^2)*((pjj-c)*(d-pjj)/(d-c))^2 }
+        if(comp==2){
+          L1<-outer(1/(1+exp(-D*alpha1*(thetas1-input$delta1_mdm))),rep(1,N_mirtd)) # logistic part of theta1, one row per theta1
+          L2<-outer(rep(1,N_mirtd),1/(1+exp(-D*alpha2*(thetas2-input$delta2_mdm)))) # logistic part of theta2, one column per theta2
+          slope2<-((d-c)*D*alpha1*L1*(1-L1)*L2)^2+((d-c)*D*alpha2*L2*(1-L2)*L1)^2
+        }
+        info<-slope2/(pjj*(1-pjj))
+        info[!is.finite(info)]<-0 # where P is exactly 0 or 1, or c = d, the surface is flat: no information
+        info
+      })
       output$plotplotly<-plotly::renderPlotly({
         pjj<-pjj()
         # pjj has one row per theta1 value, but plotly draws matrix rows along y: transpose it so theta1 runs along x
@@ -784,31 +814,11 @@ modelsirt<-function() {
         }
       })
       output$infopersp<-renderPlot({
-        c<-input$c_mdm
-        d<-input$d_mdm
-        alpha1<-input$alpha1_mdm
-        alpha2<-input$alpha2_mdm
-        Ai<-sqrt(alpha1^2+alpha2^2) #multidimensional discrimination
-        pjj<-pjj()
-        info<-matrix(NA,nrow=N_mirtd,ncol=N_mirtd)
-        for(j1 in 1:N_mirtd){
-          for (j2 in 1:N_mirtd){ info[j1,j2]<-(Ai^2)*((pjj[j1,j2]-c)^2)*((d-pjj[j1,j2])^2)/((d-c)^2)*((1-pjj[j1,j2])/pjj[j1,j2]) # (Magis,2013)
-          }
-        }
+        info<-info()
         graphics::persp(thetas1,thetas2,info,theta=input$angleinfo1_mdm,phi=input$angleinfo2_mdm,zlim=c(0,max(info)),xlab=axis_title(input$nametheta1_mdm,"\u{03b8}1"),ylab=axis_title(input$nametheta2_mdm,"\u{03b8}2"),zlab="Information",nticks=5,ticktype="detailed")
       })
       output$infoplotly<-plotly::renderPlotly({
-        c<-input$c_mdm
-        d<-input$d_mdm
-        alpha1<-input$alpha1_mdm
-        alpha2<-input$alpha2_mdm
-        Ai<-sqrt(alpha1^2+alpha2^2) #multidimensional discrimination
-        pjj<-pjj()
-        info<-matrix(NA,nrow=N_mirtd,ncol=N_mirtd)
-        for(j1 in 1:N_mirtd){
-          for (j2 in 1:N_mirtd){ info[j1,j2]<-(Ai^2)*((pjj[j1,j2]-c)^2)*((d-pjj[j1,j2])^2)/((d-c)^2)*((1-pjj[j1,j2])/pjj[j1,j2]) # (Magis,2013)
-          }
-        }
+        info<-info()
         plotly::plot_ly(x=thetas1,y=thetas2,z=t(info),width=700,height=700,showscale=FALSE) %>% # transposed like the item response surface
           plotly::layout(scene=list(xaxis=list(title=axis_title(input$nametheta1_mdm,"\u{03b8}1")),yaxis=list(title=axis_title(input$nametheta2_mdm,"\u{03b8}2")),zaxis=list(title="Information"),camera=list(eye=list(x=-1.5,y=1.5,z=1.5)))) %>%
           plotly::add_surface(opacity=1)

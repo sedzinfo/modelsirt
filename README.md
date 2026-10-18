@@ -1,9 +1,5 @@
 # modelsirt: Interactive IRT Model Visualization
 
-[![Stars](https://img.shields.io/github/stars/sedzinfo/modelsirt)](https://github.com/sedzinfo/modelsirt)
-[![License](https://img.shields.io/github/license/sedzinfo/modelsirt)](https://github.com/sedzinfo/modelsirt/blob/master/LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/modelsirt)](https://github.com/sedzinfo/modelsirt)
-
 ## Overview
 
 **modelsirt** is an R package that provides an interactive Shiny-based application for visualizing Item Response Theory (IRT) model curves. This package is designed for researchers, educators, and practitioners working with psychometric models, offering an intuitive way to explore and understand how different IRT models behave under various parameter configurations.

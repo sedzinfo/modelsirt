@@ -1,14 +1,14 @@
 Package: modelsirt
 Title: IRT curves with shinyapps
 Version: 0.0.0.9000
-Authors@R: person("Dimitrios", "Zacharatos", email = "dimitrios@psycholate.com", role = c("aut", "cre"))
-Author: Dimitrios Zacharatos [aut,cre]
- 		Metin Bulus [aut,cre]
-		Wes Bonifay [aut,cre]
-Maintainer: Dimitrios Zacharatos <dimitrios@psycholate.com>
+Authors@R: c(
+    person("Dimitrios", "Zacharatos", email = "dimitrios@psycholate.com", role = c("aut", "cre")),
+    person("Wes", "Bonifay", role = "aut", comment = "author of irtDemo, from which modelsirt is forked"),
+    person("Metin", "Bulus", role = "aut", comment = "author of irtDemo, from which modelsirt is forked"),
+    person("Kostas", "Maistrelis", role = "ctb", comment = "Thurstonian IRT curves")
+    )
 Depends: plotly, shiny, magrittr
 Description: IRT curves with shinyapps.
 License: GPL (>= 2) + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Config/roxygen2/version: 8.1.0

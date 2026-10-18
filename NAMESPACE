@@ -6,7 +6,6 @@ importFrom(grDevices,contourLines)
 importFrom(graphics,
   abline,
   arrows,
-  layout,
   lines
 )
 importFrom(plotly,
@@ -38,4 +37,3 @@ importFrom(shiny,
   withMathJax
 )
 importFrom(stats,pnorm)
-importFrom(utils,install.packages)

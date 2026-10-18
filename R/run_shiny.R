@@ -170,7 +170,8 @@
 #'     a: 1 to b, 2 to c, 3 to d and 4 to e.
 #'   \item \strong{Plot:} \eqn{P(X = a \mid \theta)}{P(X = a | theta)} to
 #'     \eqn{P(X = e \mid \theta)}{P(X = e | theta)}, one coloured curve each, titled Nominal
-#'     Response Model.
+#'     Response Model, with a note on a second, smaller line of the title that Baker's (1992)
+#'     reparameterization is used.
 #' }
 #' Category \eqn{k} is exactly as likely as category a at
 #' \eqn{\theta = \delta_k}{theta = delta_k}, because the ratio of their probabilities is
@@ -321,9 +322,8 @@
 #' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput renderText reactive renderPlot
 #' @importFrom plotly plotlyOutput renderPlotly plot_ly add_segments layout
 #' @importFrom grDevices contourLines
-#' @importFrom graphics abline arrows layout lines
+#' @importFrom graphics abline arrows lines
 #' @importFrom stats pnorm
-#' @importFrom utils install.packages
 #' @keywords irt models
 #' @export
 #' @examples
@@ -726,14 +726,14 @@ modelsirt<-function() {
         p4<-p4num_nrm/pdenom
         p5<-p5num_nrm/pdenom
         title<-"Nominal Response Model"
-        subtitle<-"Note: Baker's (1992) reparamterization used."
+        subtitle<-"Note: Baker's (1992) reparameterization used."
         df<-rbind(data.frame(x=thetas_nrm,y=p1,type="P(X=a|theta)"),
                   data.frame(x=thetas_nrm,y=p2,type="P(X=b|theta)"),
                   data.frame(x=thetas_nrm,y=p3,type="P(X=c|theta)"),
                   data.frame(x=thetas_nrm,y=p4,type="P(X=d|theta)"),
                   data.frame(x=thetas_nrm,y=p5,type="P(X=e|theta)"))
         plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
-          plotly::layout(title=title,subtitle=subtitle,
+          plotly::layout(title=list(text=paste0(title,"<br><sup>",subtitle,"</sup>")),margin=list(t=60), # this plotly has no subtitle: the note goes on a second, smaller title line, with room above the plot
                          xaxis=list(title="θ"),
                          yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                          legend=list(x=0,y=.99))%>%

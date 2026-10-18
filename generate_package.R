@@ -16,6 +16,7 @@ directory <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(directory)
 # usethis::create_package("modelsirt")
 document()
+if ("modelsirt" %in% loadedNamespaces()) unloadNamespace("modelsirt") # an old version still loaded would make the reinstalled one look corrupt
 if ("modelsirt" %in% rownames(installed.packages())) remove.packages("modelsirt")
 install()
 library(modelsirt)

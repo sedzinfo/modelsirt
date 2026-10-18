@@ -298,9 +298,15 @@ lower and upper asymptotes.
     signed distance \eqn{(a_1 \delta_1 + a_2 \delta_2) / A}{(a_1 * delta_1 + a_2 * delta_2) / A},
     the multidimensional difficulty, from the origin along the direction of the arrow.
   \item \strong{Information Plot sub-tab:} a 3-D surface, seen from the opposite corner, of
-    the item information at each point of the grid, computed for both models from the
-    probability \eqn{P} at that point as
-    \deqn{I(\theta_1, \theta_2) = A^2 \frac{(P - c)^2 (d - P)^2}{(d - c)^2} \cdot \frac{1 - P}{P}.}{I(theta1, theta2) = A^2 * (P - c)^2 * (d - P)^2 / (d - c)^2 * (1 - P) / P.}
+    the item information at each point of the grid: the squared slope of the probability
+    surface, in the direction in which it rises fastest, divided by \eqn{P (1 - P)},
+    \deqn{I(\theta_1, \theta_2) = \frac{(\partial P / \partial \theta_1)^2 + (\partial P / \partial \theta_2)^2}{P (1 - P)}.}{I(theta1, theta2) = ((dP/dtheta1)^2 + (dP/dtheta2)^2) / (P * (1 - P)).}
+    For the compensatory model this is the information of the four-parameter logistic model
+    (Magis, 2013) along the item vector,
+    \deqn{I(\theta_1, \theta_2) = \frac{D^2 A^2 (P - c)^2 (d - P)^2}{(d - c)^2 P (1 - P)},}{I(theta1, theta2) = D^2 * A^2 * (P - c)^2 * (d - P)^2 / ((d - c)^2 * P * (1 - P)),}
+    which grows with the multidimensional discrimination \eqn{A} and, when \eqn{c = 0} and
+    \eqn{d = 1}, is highest along the line where \eqn{P = 0.5}. For the non-compensatory
+    model the slope combines the two logistic parts of the model.
 }
 In the compensatory model the contour lines are straight and parallel, at right angles to
 the item vector, because the probability depends only on the weighted sum of the abilities;
@@ -337,6 +343,9 @@ Andrich, D. (1978). A rating formulation for ordered response categories.
   Applications for Estimation, Scoring, and Multi Dimensionality in Item Response Theory.
   \emph{Anadolu University Journal of Education Faculty}, 6(1), 92-108.
   \doi{10.34056/aujef.913781}
+
+  Magis, D. (2013). A note on the item information function of the four-parameter logistic
+  model. \emph{Applied Psychological Measurement}, 37(4), 304-315.
 
   Masters, G. N. (1982). A Rasch model for partial credit scoring. \emph{Psychometrika},
   47(2), 149-174.

@@ -1,7 +1,305 @@
 ##########################################################################################
 # IRT MODELS
 ##########################################################################################
-#' @title IRT models
+#' @title Explore the response curves of dichotomous, polytomous and multidimensional IRT models
+#' @description Launches a Shiny app that draws the item response functions of the main item
+#' response theory (IRT) models in interactive plots, so that you can see how each item
+#' parameter shapes them: the probability of each possible response is plotted against the
+#' latent trait and redrawn as soon as a parameter is changed. The app covers the Rasch model
+#' and the one- to four-parameter logistic models for dichotomous items; the partial credit,
+#' generalized partial credit, graded response, rating scale, generalized rating scale and
+#' nominal response models for polytomous items; the probit response functions of Thurstonian
+#' IRT; and the response surface, contour plot and information surface of a dichotomous item
+#' that measures two abilities (multidimensional IRT).
+#' @details Each tab plots, for a single item, the probability of each possible response as a
+#' function of the person's position on the latent trait (ability), written
+#' \eqn{\theta}{theta} (\eqn{\eta}{eta} in the TIRT tab). The basic building block is the
+#' four-parameter logistic function
+#' \deqn{P(X = 1 \mid \theta) = c + \frac{d - c}{1 + \exp(-D a (\theta - b))}}{P(X = 1 | theta) = c + (d - c) / (1 + exp(-D * a * (theta - b)))}
+#' the probability of a correct (or keyed) response, \eqn{X = 1}, where \eqn{a} is the
+#' discrimination (how steeply the probability rises with ability), \eqn{b} the difficulty
+#' (the ability at which the probability is halfway between its lower and upper limits),
+#' \eqn{c} the lower asymptote (the probability at very low abilities, as with guessing) and
+#' \eqn{d} the upper asymptote (the probability at very high abilities). \eqn{D} is the
+#' scaling constant: 1 keeps the logistic metric, and 1.702 makes the logistic curve almost
+#' coincide with the normal ogive, the cumulative normal distribution. The Rasch-4PL tab plots
+#' this function itself, the GRM tab uses it with \eqn{c = 0} and \eqn{d = 1} for the
+#' boundaries between categories, and the MIRT Dichotomous tab extends it to two abilities;
+#' the other models are given in their sections.
+#'
+#' The five tabs on a single trait, Rasch-4PL to NRM, share a layout. A Scaling Constant
+#' choice sets \eqn{D} to 1 (the default) or 1.702. The ability axis runs from -6 to 6, so a
+#' curve centred beyond that range, which most location sliders allow (they reach -10 and 10),
+#' moves out of view. The plots are interactive plotly charts with a marker at every 0.1 of
+#' ability: hovering shows the values, clicking a legend entry hides or shows its curve, and
+#' the plot can be zoomed and panned. A horizontal gray line marks a probability of 0.5, and
+#' the vertical line at 0 is the zero line of the axis. Every plot is redrawn as soon as a
+#' control changes.
+#'
+#' The app has seven tabs, described in the sections below.
+#' @section Rasch-4PL:
+#' The item characteristic curve of a dichotomous item under the four-parameter logistic model
+#' (4PL) and the models nested in it, which fix some of its parameters.
+#' \itemize{
+#'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (-10 to 10,
+#'     default 1); the difficulty \eqn{b} (-10 to 10, default 0); the guessing parameter
+#'     \eqn{c} (0 to 1, default 0); the inattentiveness parameter \eqn{d} (0 to 1, default 1);
+#'     and the probability to plot: \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} alone, or
+#'     \eqn{P(X \mid \theta)}{P(X | theta)} (the default), which adds the probability of an
+#'     incorrect response,
+#'     \eqn{P(X = 0 \mid \theta) = 1 - P(X = 1 \mid \theta)}{P(X = 0 | theta) = 1 - P(X = 1 | theta)}.
+#'   \item \strong{Plot:} the chosen curves across ability, with a legend. The title names the
+#'     model that the current values define: Rasch Model when \eqn{a = 1}, \eqn{c = 0} and
+#'     \eqn{d = 1}; 1PL or 2PL Model when \eqn{c = 0} and \eqn{d = 1} but \eqn{a} is not 1
+#'     (with a single item, a discrimination shared by all items, as in the 1PL, cannot be told
+#'     apart from one specific to the item, as in the 2PL); 3PL Model when \eqn{c > 0} and
+#'     \eqn{d = 1}; and 4PL Model when \eqn{c > 0} and \eqn{d < 1}.
+#'   \item \strong{Text:} below the controls, the name of the model followed by the values of
+#'     \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}. A lowered upper asymptote without a raised lower
+#'     one (\eqn{c = 0} and \eqn{d < 1}) is not given a name: the text then reads "No such
+#'     model!".
+#' }
+#' Raising \eqn{b} moves the curve to the right, so that a higher ability is needed for the
+#' same probability. The discrimination sets the steepness: at \eqn{\theta = b}{theta = b} the
+#' slope is \eqn{D a (d - c) / 4}{D * a * (d - c) / 4}, a negative \eqn{a} makes the
+#' probability fall as ability rises, and \eqn{a = 0} makes the curve flat. Raising \eqn{c}
+#' lifts the lower end of the curve, so that even the least able answer correctly with
+#' probability \eqn{c}, as when guessing; lowering \eqn{d} pulls the upper end down, so that
+#' even the most able miss with probability \eqn{1 - d}, as through inattention. With
+#' \eqn{c = 0} and \eqn{d = 1} the curve crosses the gray line at \eqn{\theta = b}{theta = b},
+#' where the curves of \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} and
+#' \eqn{P(X = 0 \mid \theta)}{P(X = 0 | theta)} also cross; in general it reaches the midpoint
+#' \eqn{(c + d) / 2} there. Choosing \eqn{D = 1.702} makes the curve steeper by that factor.
+#' @section PCM-GPCM:
+#' Category response curves of an item scored in five ordered categories, 1 to 5, under the
+#' partial credit model (PCM) and the generalized partial credit model (GPCM):
+#' \deqn{P(X = k \mid \theta) = \frac{\exp\left(\sum_{v=1}^{k-1} D a (\theta - \delta_v)\right)}{\sum_{h=1}^{5} \exp\left(\sum_{v=1}^{h-1} D a (\theta - \delta_v)\right)}}{P(X = k | theta) = exp(sum over v = 1, ..., k - 1 of D * a * (theta - delta_v)) / (sum over h = 1, ..., 5 of exp(sum over v = 1, ..., h - 1 of D * a * (theta - delta_v)))}
+#' for \eqn{k = 1, \ldots, 5}{k = 1, ..., 5}, where \eqn{a} is the discrimination,
+#' \eqn{\delta_1, \ldots, \delta_4}{delta_1, ..., delta_4} are the step parameters (one for
+#' each step from a category to the next) and an empty sum is 0, so that category 1 has the
+#' numerator 1.
+#' \itemize{
+#'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (-10 to 10 in
+#'     steps of 0.5, default 1); and the four step parameters (-10 to 10; defaults -2, -0.7,
+#'     0.8 and 2, because the code asks for -0.75 and 0.75, which the sliders round to their
+#'     steps of 0.1).
+#'   \item \strong{Plot:} the probabilities of the five categories,
+#'     \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} to
+#'     \eqn{P(X = 5 \mid \theta)}{P(X = 5 | theta)}, one coloured curve each. The title reads
+#'     Partial Credit Model (Masters, 1982) when \eqn{a = 1} and Generalized Partial Credit
+#'     Model (Muraki, 1992) otherwise. A discrimination of 0 is rejected with an error message
+#'     in place of the plot.
+#' }
+#' The curves of adjacent categories \eqn{k} and \eqn{k + 1} cross exactly at
+#' \eqn{\theta = \delta_k}{theta = delta_k}, so each step parameter moves one crossing point.
+#' With the step parameters in increasing order, each category in turn is the most likely
+#' response as ability rises; if a step parameter is lower than the one before it (reversed
+#' steps), the category between them is never the most likely. A larger \eqn{a} makes the
+#' curves narrower and more peaked, and a negative \eqn{a} reverses the order of the
+#' categories along the ability axis.
+#' @section GRM:
+#' Category response curves of an item with five ordered categories under the graded response
+#' model (GRM). The model first gives, for each of the four boundaries between adjacent
+#' categories, the probability of a response in a category above the boundary,
+#' \deqn{P^*_k(\theta) = \frac{1}{1 + \exp(-D a (\theta - \delta_k))}, \quad k = 1, \ldots, 4,}{P*_k(theta) = 1 / (1 + exp(-D * a * (theta - delta_k))), k = 1, ..., 4,}
+#' and then the probability of each category as the difference between successive boundary
+#' curves,
+#' \eqn{P(X = m \mid \theta) = P^*_{m-1}(\theta) - P^*_m(\theta)}{P(X = m | theta) = P*_(m-1)(theta) - P*_m(theta)}
+#' for \eqn{m = 1, \ldots, 5}{m = 1, ..., 5}, with \eqn{P^*_0 = 1}{P*_0 = 1} and
+#' \eqn{P^*_5 = 0}{P*_5 = 0}.
+#' \itemize{
+#'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (-10 to 10,
+#'     default 1.5), shared by all boundaries; and the four difficulties,
+#'     \eqn{\delta_1}{delta_1} (-2.5 to -1.5), \eqn{\delta_2}{delta_2} (-1.25 to -0.25),
+#'     \eqn{\delta_3}{delta_3} (0 to 1.25) and \eqn{\delta_4}{delta_4} (1.5 to 2.5), with
+#'     defaults -2, -0.8, 0.8 and 2 (the code asks for -0.75 and 0.75, which the sliders round
+#'     to one decimal). The slider ranges do not overlap, which keeps the difficulties in
+#'     increasing order, as the model requires: otherwise some category probabilities would
+#'     be negative.
+#'   \item \strong{Plot:} \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} to
+#'     \eqn{P(X = 5 \mid \theta)}{P(X = 5 | theta)}, one coloured curve each, titled Graded
+#'     Response Model.
+#' }
+#' Each difficulty \eqn{\delta_k}{delta_k} is the ability at which a response above category
+#' \eqn{k} becomes as likely as not. Only the first and the last can be read directly from the
+#' plot: the curve of category 1 crosses the gray line at \eqn{\delta_1}{delta_1}, and that of
+#' category 5 at \eqn{\delta_4}{delta_4}. Unlike the step parameters of the PCM, the
+#' difficulties are not the points where adjacent curves cross. Because the GRM gives the item
+#' a single discrimination, changing \eqn{a} makes all curves steeper or flatter together.
+#' @section RSM-GRSM:
+#' Category response curves of an item with five ordered categories under the rating scale
+#' model (RSM) and its generalized form with a discrimination parameter (GRSM). Both are the
+#' partial credit model with each step parameter split into the difficulty of the item and a
+#' threshold:
+#' \deqn{P(X = k \mid \theta) = \frac{\exp\left(\sum_{v=1}^{k-1} D a (\theta - (\delta + \tau_v))\right)}{\sum_{h=1}^{5} \exp\left(\sum_{v=1}^{h-1} D a (\theta - (\delta + \tau_v))\right)}}{P(X = k | theta) = exp(sum over v = 1, ..., k - 1 of D * a * (theta - (delta + tau_v))) / (sum over h = 1, ..., 5 of exp(sum over v = 1, ..., h - 1 of D * a * (theta - (delta + tau_v))))}
+#' where \eqn{\delta}{delta} is the difficulty (location) of the item and
+#' \eqn{\tau_1, \ldots, \tau_4}{tau_1, ..., tau_4} are the thresholds, which in a rating
+#' scale model are the same for all items that share a response scale.
+#' \itemize{
+#'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (-10 to 10,
+#'     default 1); the difficulty \eqn{\delta}{delta} (-10 to 10, default 0); and the four
+#'     thresholds (-10 to 10; defaults -1, -0.4, 0.4 and 1).
+#'   \item \strong{Plot:} \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} to
+#'     \eqn{P(X = 5 \mid \theta)}{P(X = 5 | theta)}, one coloured curve each. The title reads
+#'     Rating Scale Model (Andrich, 1978) when \eqn{a = 1} and Generalized Rating Scale Model
+#'     (Muraki, 1990) otherwise. A discrimination of 0 is rejected with an error message in
+#'     place of the plot.
+#' }
+#' Adjacent curves \eqn{k} and \eqn{k + 1} cross at
+#' \eqn{\theta = \delta + \tau_k}{theta = delta + tau_k}. Changing the difficulty shifts all
+#' five curves along the ability axis together without changing their shape, the thresholds
+#' set the spacing of the crossings around the difficulty, and the discrimination sets how
+#' peaked the curves are.
+#' @section NRM:
+#' Category response curves of an item with five unordered categories, labelled a to e, under
+#' the nominal response model (NRM). Category a is the reference category, whose exponent is
+#' fixed at 0, and each of the other four categories has its own discrimination
+#' \eqn{\alpha_k}{alpha_k} (written with a Greek letter here, to avoid confusion with
+#' category a) and difficulty \eqn{\delta_k}{delta_k}:
+#' \deqn{P(X = k \mid \theta) = \frac{\exp(z_k)}{\sum_{h=a}^{e} \exp(z_h)}, \quad z_a = 0, \quad z_k = D \alpha_k (\theta - \delta_k) \quad (k = b, \ldots, e).}{P(X = k | theta) = exp(z_k) / (exp(z_a) + exp(z_b) + ... + exp(z_e)), with z_a = 0 and z_k = D * alpha_k * (theta - delta_k) for k = b, ..., e.}
+#' Following Baker (1992), each exponent is written with a difficulty rather than an
+#' intercept.
+#' \itemize{
+#'   \item \strong{Controls:} the scaling constant; four discriminations (-10 to 10; defaults
+#'     -4, -2, 2 and 4) and four difficulties (-10 to 10; defaults -4, -2, 2 and 4).
+#'     Discrimination \eqn{j} and difficulty \eqn{j} belong to the \eqn{j}-th category after
+#'     a: 1 to b, 2 to c, 3 to d and 4 to e.
+#'   \item \strong{Plot:} \eqn{P(X = a \mid \theta)}{P(X = a | theta)} to
+#'     \eqn{P(X = e \mid \theta)}{P(X = e | theta)}, one coloured curve each, titled Nominal
+#'     Response Model.
+#' }
+#' Category \eqn{k} is exactly as likely as category a at
+#' \eqn{\theta = \delta_k}{theta = delta_k}, because the ratio of their probabilities is
+#' \eqn{\exp(z_k)}{exp(z_k)}. The discriminations order the categories along the ability
+#' axis: the category with the largest discrimination (counting 0 for category a) becomes the
+#' most likely at high abilities, the one with the smallest at low abilities, and the others
+#' can be the most likely in between. Nothing forces an order on the categories, which is what
+#' sets the NRM apart from the models for ordered categories. With the default values,
+#' categories c, a and d are in turn the most likely across the plotted range, while b and e
+#' would take over only beyond -6 and 6.
+#' @section TIRT:
+#' Probit response functions of Thurstonian item response theory (TIRT), in which a binary
+#' outcome, such as the choice between two items in a forced-choice questionnaire, depends on
+#' the latent trait \eqn{\eta}{eta} through \eqn{\Phi}{Phi}, the cumulative distribution
+#' function of the standard normal distribution. The tab has three sub-tabs, each named by a
+#' formula, with these functions and controls:
+#' \itemize{
+#'   \item \strong{First sub-tab:} a single binary outcome, written with the parameters of
+#'     factor analysis,
+#'     \deqn{P(\eta) = \Phi\left(\frac{-\gamma + \lambda \eta}{\sqrt{\psi}}\right),}{P(eta) = Phi((-gamma + lambda * eta) / sqrt(psi)),}
+#'     with the threshold \eqn{\gamma}{gamma} (-10 to 10, default 0), the factor loading
+#'     \eqn{\lambda}{lambda} (-10 to 10, default 0.5) and the error (unique) variance
+#'     \eqn{\psi}{psi} (0 to 10, default 0.5).
+#'   \item \strong{Second sub-tab:} the choice of item \eqn{i} over item \eqn{k} in a pair,
+#'     \deqn{P(\eta) = \Phi\left(\frac{-\gamma + \lambda_i \eta - \lambda_k \eta}{\sqrt{\psi_i + \psi_k}}\right),}{P(eta) = Phi((-gamma + lambda_i * eta - lambda_k * eta) / sqrt(psi_i + psi_k)),}
+#'     with the threshold of the pair \eqn{\gamma}{gamma} (-10 to 10, default 0), the
+#'     loadings of the two items \eqn{\lambda_i}{lambda_i} and \eqn{\lambda_k}{lambda_k} (-10
+#'     to 10; defaults 0.5 and 0) and their error variances \eqn{\psi_i}{psi_i} and
+#'     \eqn{\psi_k}{psi_k} (0 to 10, default 0.5 each). The formula on the sub-tab gives each
+#'     item its own trait, but the plot uses the same \eqn{\eta}{eta} for both, so only the
+#'     difference \eqn{\lambda_i - \lambda_k}{lambda_i - lambda_k} matters: with equal
+#'     loadings the curve is flat, and the choice tells nothing about the trait.
+#'   \item \strong{Third sub-tab:} the same comparison in intercept and slope form,
+#'     \deqn{P(\eta) = \Phi(\alpha + (\beta_i - \beta_k) \eta),}{P(eta) = Phi(alpha + (beta_i - beta_k) * eta),}
+#'     with the intercept \eqn{\alpha}{alpha} (-10 to 10, default 0) and the slopes
+#'     \eqn{\beta_i}{beta_i} and \eqn{\beta_k}{beta_k} (-10 to 10; defaults 0.5 and 0). It
+#'     draws the curve of the second sub-tab when
+#'     \eqn{\alpha = -\gamma / \sqrt{\psi_i + \psi_k}}{alpha = -gamma / sqrt(psi_i + psi_k)}
+#'     and each \eqn{\beta = \lambda / \sqrt{\psi_i + \psi_k}}{beta = lambda / sqrt(psi_i + psi_k)};
+#'     with their defaults, both sub-tabs show \eqn{\Phi(0.5 \eta)}{Phi(0.5 * eta)}.
+#'   \item \strong{Range:} each sub-tab also has a slider labelled \eqn{\eta}{eta} (1 to 100,
+#'     default 6) that sets no parameter: it sets the range of the horizontal axis, from
+#'     \eqn{-\eta}{-eta} to \eqn{\eta}{eta}.
+#'   \item \strong{Plot:} the probability, from 0 to 1, against \eqn{\eta}{eta}: a single
+#'     curve with a marker at every 0.1, and the gray line at 0.5.
+#' }
+#' Each curve crosses 0.5 where the argument of \eqn{\Phi}{Phi} is 0, for example at
+#' \eqn{\eta = \gamma / \lambda}{eta = gamma / lambda} in the first sub-tab. The loadings or
+#' slopes set the steepness and direction of the curve, and larger error variances make it
+#' flatter. There is no scaling constant in this tab, since the curves are normal ogives.
+#' @section MIRT Dichotomous:
+#' The response surface of a dichotomous item that measures two abilities,
+#' \eqn{\theta_1}{theta1} and \eqn{\theta_2}{theta2} (multidimensional IRT, MIRT), on a grid
+#' of 50 by 50 points from -4 to 4 on each dimension. In the compensatory model (the default)
+#' the probability is a logistic function of a weighted sum of the two abilities,
+#' \deqn{P(\theta_1, \theta_2) = c + \frac{d - c}{1 + \exp(-D (a_1 (\theta_1 - \delta_1) + a_2 (\theta_2 - \delta_2)))},}{P(theta1, theta2) = c + (d - c) / (1 + exp(-D * (a_1 * (theta1 - delta_1) + a_2 * (theta2 - delta_2)))),}
+#' so that a high ability on one dimension can make up for a low ability on the other. In the
+#' non-compensatory model it is the product of one logistic function for each ability,
+#' \deqn{P(\theta_1, \theta_2) = c + (d - c) \frac{1}{1 + \exp(-D a_1 (\theta_1 - \delta_1))} \cdot \frac{1}{1 + \exp(-D a_2 (\theta_2 - \delta_2))},}{P(theta1, theta2) = c + (d - c) / ((1 + exp(-D * a_1 * (theta1 - delta_1))) * (1 + exp(-D * a_2 * (theta2 - delta_2)))),}
+#' so that a low ability on either dimension keeps the probability low, whatever the other.
+#' Here \eqn{a_1} and \eqn{a_2} are the discriminations, \eqn{\delta_1}{delta_1} and
+#' \eqn{\delta_2}{delta_2} the locations on the two dimensions, and \eqn{c} and \eqn{d} the
+#' lower and upper asymptotes.
+#' \itemize{
+#'   \item \strong{Controls:} a choice labelled Item Response Function, which only sets the
+#'     scaling constant of the logistic function: Normal Ogive gives \eqn{D = 1} and Logistic
+#'     (the default) gives \eqn{D = 1.702}; whether the model is compensatory (Yes, the
+#'     default, or No); locations 1 and 2 (-10 to 10, default 0); discriminations 1 and 2
+#'     (-10 to 10, default 1; a value of 0 is rejected with an error message); the lower
+#'     asymptote \eqn{c} (0 to 0.4 in steps of 0.1, default 0) and the upper asymptote
+#'     \eqn{d} (0 to 1, default 1); and names for the two dimensions (default Math and
+#'     Reading), used as axis titles.
+#'   \item \strong{Item Response Surface sub-tab:} \eqn{P(\theta_1, \theta_2)}{P(theta1, theta2)}
+#'     as an interactive 3-D surface, coloured from purple (low) to yellow (high probability),
+#'     with P(Y = 1) from 0 to 1 on the vertical axis; drag it to rotate it.
+#'   \item \strong{Contour Plot sub-tab:} the same surface seen from above, as contour lines of
+#'     equal probability, each labelled with its probability; a slider sets the approximate
+#'     number of contour levels (10 to 100, default 10). Black lines mark
+#'     \eqn{\theta_1 = 0}{theta1 = 0} and \eqn{\theta_2 = 0}{theta2 = 0}. A thick line marks
+#'     the contour halfway between the asymptotes: 0.5 when \eqn{c = 0} and \eqn{d = 1},
+#'     \eqn{(c + 1) / 2} when \eqn{c > 0} and \eqn{d = 1}, and \eqn{(c + d) / 2} when
+#'     \eqn{c > 0} and \eqn{d < 1} (no thick line is drawn when \eqn{c = 0} and \eqn{d < 1}).
+#'     For the compensatory model a blue arrow shows the item vector. It starts on the line
+#'     where the probability is halfway between the asymptotes, at the point of that line
+#'     closest to the origin; it points in the direction in which the probability rises
+#'     fastest, at the angle \eqn{\arccos(a_1 / A)}{arccos(a_1 / A)} to the
+#'     \eqn{\theta_1}{theta1} axis; and its length is the multidimensional discrimination
+#'     \eqn{A = \sqrt{a_1^2 + a_2^2}}{A = sqrt(a_1^2 + a_2^2)}. Its starting point lies at the
+#'     signed distance \eqn{(a_1 \delta_1 + a_2 \delta_2) / A}{(a_1 * delta_1 + a_2 * delta_2) / A},
+#'     the multidimensional difficulty, from the origin along the direction of the arrow.
+#'   \item \strong{Information Plot sub-tab:} a 3-D surface, seen from the opposite corner, of
+#'     the item information at each point of the grid, computed for both models from the
+#'     probability \eqn{P} at that point as
+#'     \deqn{I(\theta_1, \theta_2) = A^2 \frac{(P - c)^2 (d - P)^2}{(d - c)^2} \cdot \frac{1 - P}{P}.}{I(theta1, theta2) = A^2 * (P - c)^2 * (d - P)^2 / (d - c)^2 * (1 - P) / P.}
+#' }
+#' In the compensatory model the contour lines are straight and parallel, at right angles to
+#' the item vector, because the probability depends only on the weighted sum of the abilities;
+#' in the non-compensatory model they bend, since both abilities must be high for a high
+#' probability. Making one discrimination larger than the other turns the item vector towards
+#' the axis of that dimension, which means that the item measures mostly that ability, and
+#' moving a location shifts the surface along its dimension.
+#' @section Acknowledgments:
+#' modelsirt is a fork and substantial extension of the irtDemo package by Wes Bonifay and
+#' Metin Bulus, which is available on CRAN (\url{https://cran.r-project.org/package=irtDemo});
+#' the title of the app, IRT Models using IRTDemo, reflects this origin. Dimitrios Zacharatos
+#' modified and expanded it: he consolidated the IRT models into a single interface, rebuilt
+#' the visualisations with Plotly for interactivity, added further IRT models and improved the
+#' user interface. Special thanks to Kostas Maistrelis (\url{https://github.com/maisk}) for
+#' contributing the implementation of the Thurstonian IRT curves. The tabs keep the credits
+#' shown in the app itself: the Rasch-4PL, PCM-GPCM and RSM-GRSM tabs are credited to Metin
+#' Bulus, and the GRM, NRM and MIRT Dichotomous tabs to an unknown contributor.
+#' @return A Shiny app object (\code{shiny::shinyApp()}). Printing it, which is what happens
+#'   when you call \code{modelsirt()} at the console, starts the app in the browser or the
+#'   RStudio viewer; you can also pass it to \code{shiny::runApp()}.
+#' @references Andrich, D. (1978). A rating formulation for ordered response categories.
+#'   \emph{Psychometrika}, 43(4), 561-573.
+#'
+#'   Baker, F. B. (1992). \emph{Item Response Theory: Parameter Estimation Techniques}. New
+#'   York: Marcel Dekker.
+#'
+#'   Bulus, M., and Bonifay, W. (2022). irtDemo R Package: Pedagogical Interactive Web
+#'   Applications for Estimation, Scoring, and Multi Dimensionality in Item Response Theory.
+#'   \emph{Anadolu University Journal of Education Faculty}, 6(1), 92-108.
+#'   \doi{10.34056/aujef.913781}
+#'
+#'   Masters, G. N. (1982). A Rasch model for partial credit scoring. \emph{Psychometrika},
+#'   47(2), 149-174.
+#'
+#'   Muraki, E. (1990). Fitting a polytomous item response model to Likert-type data.
+#'   \emph{Applied Psychological Measurement}, 14(1), 59-71.
+#'
+#'   Muraki, E. (1992). A generalized partial credit model: Application of an EM algorithm.
+#'   \emph{Applied Psychological Measurement}, 16(2), 159-176.
 #' @import magrittr
 #' @importFrom shiny shinyApp tagList navbarPage tabPanel titlePanel h4 sidebarPanel selectInput sliderInput textOutput mainPanel tabsetPanel withMathJax textInput inputPanel plotOutput renderText reactive renderPlot
 #' @importFrom plotly plotlyOutput renderPlotly plot_ly add_segments layout

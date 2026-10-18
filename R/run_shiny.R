@@ -53,11 +53,11 @@
 #'     \eqn{d = 1}; 1PL or 2PL Model when \eqn{c = 0} and \eqn{d = 1} but \eqn{a} is not 1
 #'     (with a single item, a discrimination shared by all items, as in the 1PL, cannot be told
 #'     apart from one specific to the item, as in the 2PL); 3PL Model when \eqn{c > 0} and
-#'     \eqn{d = 1}; and 4PL Model when \eqn{c > 0} and \eqn{d < 1}.
+#'     \eqn{d = 1}; 4PL Model (c = 0) when \eqn{c = 0} and \eqn{d < 1}, a 4PL without guessing
+#'     whose upper asymptote allows for slipping (careless errors by able respondents); and 4PL
+#'     Model when \eqn{c > 0} and \eqn{d < 1}.
 #'   \item \strong{Text:} below the controls, the name of the model followed by the values of
-#'     \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}. A lowered upper asymptote without a raised lower
-#'     one (\eqn{c = 0} and \eqn{d < 1}) is not given a name: the text then reads "No such
-#'     model!".
+#'     \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}.
 #' }
 #' Raising \eqn{b} moves the curve to the right, so that a higher ability is needed for the
 #' same probability. The discrimination sets the steepness: at \eqn{\theta = b}{theta = b} the
@@ -587,8 +587,9 @@ modelsirt<-function() {
         if(input$la_rach==0 & input$ua_rach==1 & input$alpha_rach==1){title<-c("Rasch Model")}
         if(input$la_rach==0 & input$ua_rach==1 & input$alpha_rach!=1){title<-c("1PL or 2PL Model")}
         if(input$ua_rach==1 & input$la_rach!=0){title<-c("3PL Model")}
+        if(input$la_rach==0 & input$ua_rach!=1){title<-c("4PL Model (c = 0)")} # no guessing, upper asymptote below 1 (slipping)
         if(input$la_rach!=0 & input$ua_rach!=1){title<-c("4PL Model")}
-        output$feedback<-shiny::renderText({ifelse(input$ua_rach!=1 & input$la_rach==0,"No such model!",paste(title,": a=",input$alpha_rach," b=",input$delta_rach," c=",input$la_rach," d=",input$ua_rach))})
+        output$feedback<-shiny::renderText({paste(title,": a=",input$alpha_rach," b=",input$delta_rach," c=",input$la_rach," d=",input$ua_rach)})
         modprob<-switch(input$modprob_rach,"1"=1,"2"=2)
         if(modprob==1){
           df<-data.frame(x=thetas_rach,y=p1_rach,type="P(X=1|theta)")

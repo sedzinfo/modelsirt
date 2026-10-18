@@ -67,11 +67,11 @@ The item characteristic curve of a dichotomous item under the four-parameter log
     \eqn{d = 1}; 1PL or 2PL Model when \eqn{c = 0} and \eqn{d = 1} but \eqn{a} is not 1
     (with a single item, a discrimination shared by all items, as in the 1PL, cannot be told
     apart from one specific to the item, as in the 2PL); 3PL Model when \eqn{c > 0} and
-    \eqn{d = 1}; and 4PL Model when \eqn{c > 0} and \eqn{d < 1}.
+    \eqn{d = 1}; 4PL Model (c = 0) when \eqn{c = 0} and \eqn{d < 1}, a 4PL without guessing
+    whose upper asymptote allows for slipping (careless errors by able respondents); and 4PL
+    Model when \eqn{c > 0} and \eqn{d < 1}.
   \item \strong{Text:} below the controls, the name of the model followed by the values of
-    \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}. A lowered upper asymptote without a raised lower
-    one (\eqn{c = 0} and \eqn{d < 1}) is not given a name: the text then reads "No such
-    model!".
+    \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}.
 }
 Raising \eqn{b} moves the curve to the right, so that a higher ability is needed for the
 same probability. The discrimination sets the steepness: at \eqn{\theta = b}{theta = b} the
@@ -263,9 +263,10 @@ Here \eqn{a_1} and \eqn{a_2} are the discriminations, \eqn{\delta_1}{delta_1} an
 \eqn{\delta_2}{delta_2} the locations on the two dimensions, and \eqn{c} and \eqn{d} the
 lower and upper asymptotes.
 \itemize{
-  \item \strong{Controls:} a choice labelled Item Response Function, which only sets the
-    scaling constant of the logistic function: Normal Ogive gives \eqn{D = 1} and Logistic
-    (the default) gives \eqn{D = 1.702}; whether the model is compensatory (Yes, the
+  \item \strong{Controls:} a choice labelled Item Response Function, which sets the scaling
+    constant of the logistic function: Logistic gives \eqn{D = 1}, and Normal ogive
+    approximation (the default) gives \eqn{D = 1.702}, which makes the logistic curve almost
+    identical to the normal ogive; whether the model is compensatory (Yes, the
     default, or No); the item's location on each dimension, labelled
     \eqn{\theta_1}{theta1} location and \eqn{\theta_2}{theta2} location (-10 to 10, default
     0); its discrimination on each dimension, labelled \eqn{\theta_1}{theta1} discrimination

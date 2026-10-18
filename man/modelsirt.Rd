@@ -286,9 +286,9 @@ lower and upper asymptotes.
     equal probability, each labelled with its probability; a slider sets the approximate
     number of contour levels (10 to 100, default 10). Black lines mark
     \eqn{\theta_1 = 0}{theta1 = 0} and \eqn{\theta_2 = 0}{theta2 = 0}. A thick line marks
-    the contour halfway between the asymptotes: 0.5 when \eqn{c = 0} and \eqn{d = 1},
-    \eqn{(c + 1) / 2} when \eqn{c > 0} and \eqn{d = 1}, and \eqn{(c + d) / 2} when
-    \eqn{c > 0} and \eqn{d < 1} (no thick line is drawn when \eqn{c = 0} and \eqn{d < 1}).
+    the contour halfway between the asymptotes, at probability \eqn{(c + d) / 2} (0.5 when
+    \eqn{c = 0} and \eqn{d = 1}); it is left out when that probability is not reached inside
+    the grid, as for a very easy or very hard item.
     For the compensatory model a blue arrow shows the item vector. It starts on the line
     where the probability is halfway between the asymptotes, at the point of that line
     closest to the origin; it points in the direction in which the probability rises

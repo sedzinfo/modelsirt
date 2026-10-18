@@ -108,14 +108,18 @@
 #' for \eqn{m = 1, \ldots, 5}{m = 1, ..., 5}, with \eqn{P^*_0 = 1}{P*_0 = 1} and
 #' \eqn{P^*_5 = 0}{P*_5 = 0}.
 #' \itemize{
-#'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (-10 to 10,
+#'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (0 to 10,
 #'     default 1.5), shared by all boundaries; and the four difficulties,
 #'     \eqn{\delta_1}{delta_1} (-2.5 to -1.5), \eqn{\delta_2}{delta_2} (-1.25 to -0.25),
 #'     \eqn{\delta_3}{delta_3} (0 to 1.25) and \eqn{\delta_4}{delta_4} (1.5 to 2.5), with
 #'     defaults -2, -0.8, 0.8 and 2 (the code asks for -0.75 and 0.75, which the sliders round
 #'     to one decimal). The slider ranges do not overlap, which keeps the difficulties in
 #'     increasing order, as the model requires: otherwise some category probabilities would
-#'     be negative.
+#'     be negative. For the same reason the discrimination cannot be negative: the boundary
+#'     curves would then fall instead of rise and swap order, so an item that runs the other
+#'     way is reverse-scored instead. At \eqn{a = 0} the item does not depend on ability: every
+#'     boundary curve is flat at 0.5, so categories 1 and 5 each get probability 0.5 and the
+#'     middle categories none.
 #'   \item \strong{Plot:} \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} to
 #'     \eqn{P(X = 5 \mid \theta)}{P(X = 5 | theta)}, one coloured curve each, titled Graded
 #'     Response Model.
@@ -494,7 +498,7 @@ modelsirt<-function() {
                       ##########################################################################################
                       shiny::tabPanel("GRM",shiny::titlePanel(shiny::h4("Unknown Contributor")),
                                       shiny::sidebarPanel(shiny::selectInput("D_grm",label="Scaling Constant",list("1"=1,"1.702"=2),selected=1),
-                                                          shiny::sliderInput("alpha_grm",label="Discrimination",min=-10,max=10,value=1.5,step=.1),
+                                                          shiny::sliderInput("alpha_grm",label="Discrimination",min=0,max=10,value=1.5,step=.1),
                                                           shiny::sliderInput("delta1_grm",label="Difficulty 1",min=-2.5,max=-1.5,value=-2,step=.1),
                                                           shiny::sliderInput("delta2_grm",label="Difficulty 2",min=-1.25,max=-0.25,value=-0.75,step=.1),
                                                           shiny::sliderInput("delta3_grm",label="Difficulty 3",min=0,max=1.25,value=0.75,step=.1),

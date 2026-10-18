@@ -196,7 +196,8 @@ intercept.
     a: 1 to b, 2 to c, 3 to d and 4 to e.
   \item \strong{Plot:} \eqn{P(X = a \mid \theta)}{P(X = a | theta)} to
     \eqn{P(X = e \mid \theta)}{P(X = e | theta)}, one coloured curve each, titled Nominal
-    Response Model.
+    Response Model, with a note on a second, smaller line of the title that Baker's (1992)
+    reparameterization is used.
 }
 Category \eqn{k} is exactly as likely as category a at
 \eqn{\theta = \delta_k}{theta = delta_k}, because the ratio of their probabilities is

@@ -208,6 +208,5 @@ For those interested in learning more about IRT:
 ![Last Commit](https://img.shields.io/github/last-commit/sedzinfo/modelsirt)
 ![Contributors](https://img.shields.io/github/contributors/sedzinfo/modelsirt)
 ![License](https://img.shields.io/github/license/sedzinfo/modelsirt)
-<!--![Release](https://img.shields.io/github/v/release/sedzinfo/modelsirt)-->
-<!--![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/modelsirt/main.yml)-->
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/sedzinfo/modelsirt/build-tarball.yml)
 

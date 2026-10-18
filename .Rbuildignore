@@ -1,2 +1,10 @@
 ^modelsirt\.Rproj$
 ^\.Rproj\.user$
+^.*\.Rproj$
+^.*\.code-workspace$
+^generate_package.*\.R$
+^[^/]*\.tar\.gz$
+^[^/]*\.pdf$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

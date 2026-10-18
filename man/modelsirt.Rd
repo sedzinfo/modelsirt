@@ -10,7 +10,7 @@ modelsirt()
 IRT models
 }
 \examples{
-modelsirt()
+if (interactive()) modelsirt()
 }
 \keyword{irt}
 \keyword{models}

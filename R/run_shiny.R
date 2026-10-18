@@ -12,7 +12,7 @@
 #' @keywords irt models
 #' @export
 #' @examples
-#' modelsirt()
+#' if (interactive()) modelsirt()
 modelsirt<-function() {
   ##########################################################################################
   # RACH

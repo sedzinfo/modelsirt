@@ -231,9 +231,10 @@
 #' \eqn{\delta_2}{delta_2} the locations on the two dimensions, and \eqn{c} and \eqn{d} the
 #' lower and upper asymptotes.
 #' \itemize{
-#'   \item \strong{Controls:} a choice labelled Item Response Function, which only sets the
-#'     scaling constant of the logistic function: Normal Ogive gives \eqn{D = 1} and Logistic
-#'     (the default) gives \eqn{D = 1.702}; whether the model is compensatory (Yes, the
+#'   \item \strong{Controls:} a choice labelled Item Response Function, which sets the scaling
+#'     constant of the logistic function: Logistic gives \eqn{D = 1}, and Normal ogive
+#'     approximation (the default) gives \eqn{D = 1.702}, which makes the logistic curve almost
+#'     identical to the normal ogive; whether the model is compensatory (Yes, the
 #'     default, or No); the item's location on each dimension, labelled
 #'     \eqn{\theta_1}{theta1} location and \eqn{\theta_2}{theta2} location (-10 to 10, default
 #'     0); its discrimination on each dimension, labelled \eqn{\theta_1}{theta1} discrimination
@@ -559,7 +560,7 @@ modelsirt<-function() {
                       # MULTIDIMENSIONAL DICHOTOMOUS
                       ##########################################################################################
                       shiny::tabPanel("MIRT Dichotomous",shiny::titlePanel(shiny::h4("Unknown Contributor")),
-                                      shiny::sidebarPanel(width=3,shiny::selectInput("D_mdm",label="Item Response Function",list("Normal Ogive"=1,"Logistic"=2),selected=2),
+                                      shiny::sidebarPanel(width=3,shiny::selectInput("D_mdm",label="Item Response Function",list("Logistic (D = 1)"=1,"Normal ogive approximation (D = 1.702)"=2),selected=2),
                                                           shiny::selectInput("comp_mdm",label="Compensatory",list("Yes"=1,"No"=2),selected=1),
                                                           shiny::sliderInput("delta1_mdm",label="\u{03b8}1 location",min=-10,max=10,value=0,step=0.1),
                                                           shiny::sliderInput("delta2_mdm",label="\u{03b8}2 location",min=-10,max=10,value=0,step=0.1),

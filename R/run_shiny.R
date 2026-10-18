@@ -80,9 +80,9 @@
 #' numerator 1.
 #' \itemize{
 #'   \item \strong{Controls:} the scaling constant; the discrimination \eqn{a} (-10 to 10 in
-#'     steps of 0.5, default 1); and the four step parameters (-10 to 10; defaults -2, -0.7,
-#'     0.8 and 2, because the code asks for -0.75 and 0.75, which the sliders round to their
-#'     steps of 0.1).
+#'     steps of 0.5, default 1); and the four step parameters (-10 to 10), with defaults -2,
+#'     -0.7, 0.8 and 2 (the code asks for -0.75 and 0.75, which the sliders round to one
+#'     decimal).
 #'   \item \strong{Plot:} the probabilities of the five categories,
 #'     \eqn{P(X = 1 \mid \theta)}{P(X = 1 | theta)} to
 #'     \eqn{P(X = 5 \mid \theta)}{P(X = 5 | theta)}, one coloured curve each. The title reads
@@ -128,9 +128,9 @@
 #' a single discrimination, changing \eqn{a} makes all curves steeper or flatter together.
 #' @section RSM-GRSM:
 #' Category response curves of an item with five ordered categories under the rating scale
-#' model (RSM) and its generalized form with a discrimination parameter (GRSM). Both are the
-#' partial credit model with each step parameter split into the difficulty of the item and a
-#' threshold:
+#' model (RSM) and its generalized form with a discrimination parameter (GRSM). Both are
+#' partial credit models in which each step parameter is split into the difficulty of the
+#' item and a threshold:
 #' \deqn{P(X = k \mid \theta) = \frac{\exp\left(\sum_{v=1}^{k-1} D a (\theta - (\delta + \tau_v))\right)}{\sum_{h=1}^{5} \exp\left(\sum_{v=1}^{h-1} D a (\theta - (\delta + \tau_v))\right)}}{P(X = k | theta) = exp(sum over v = 1, ..., k - 1 of D * a * (theta - (delta + tau_v))) / (sum over h = 1, ..., 5 of exp(sum over v = 1, ..., h - 1 of D * a * (theta - (delta + tau_v))))}
 #' where \eqn{\delta}{delta} is the difficulty (location) of the item and
 #' \eqn{\tau_1, \ldots, \tau_4}{tau_1, ..., tau_4} are the thresholds, which in a rating

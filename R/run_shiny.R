@@ -234,11 +234,14 @@
 #'   \item \strong{Controls:} a choice labelled Item Response Function, which only sets the
 #'     scaling constant of the logistic function: Normal Ogive gives \eqn{D = 1} and Logistic
 #'     (the default) gives \eqn{D = 1.702}; whether the model is compensatory (Yes, the
-#'     default, or No); locations 1 and 2 (-10 to 10, default 0); discriminations 1 and 2
-#'     (-10 to 10, default 1; a value of 0 is rejected with an error message); the lower
-#'     asymptote \eqn{c} (0 to 0.4 in steps of 0.1, default 0) and the upper asymptote
-#'     \eqn{d} (0 to 1, default 1); and names for the two dimensions (default Math and
-#'     Reading), used as axis titles.
+#'     default, or No); the item's location on each dimension, labelled
+#'     \eqn{\theta_1}{theta1} location and \eqn{\theta_2}{theta2} location (-10 to 10, default
+#'     0); its discrimination on each dimension, labelled \eqn{\theta_1}{theta1} discrimination
+#'     and \eqn{\theta_2}{theta2} discrimination (-10 to 10, default 1; a value of 0 is rejected
+#'     with an error message); the lower asymptote \eqn{c} (0 to 0.4 in steps of 0.1, default 0)
+#'     and the upper asymptote \eqn{d} (0 to 1, default 1); and optional names for the two
+#'     dimensions. The axes are labelled \eqn{\theta_1}{theta1} and \eqn{\theta_2}{theta2}, and a
+#'     name typed in is shown in front of the symbol, for example Math (\eqn{\theta_1}{theta1}).
 #'   \item \strong{Item Response Surface sub-tab:} \eqn{P(\theta_1, \theta_2)}{P(theta1, theta2)}
 #'     as an interactive 3-D surface, coloured from purple (low) to yellow (high probability),
 #'     with P(Y = 1) from 0 to 1 on the vertical axis; drag it to rotate it.
@@ -558,14 +561,14 @@ modelsirt<-function() {
                       shiny::tabPanel("MIRT Dichotomous",shiny::titlePanel(shiny::h4("Unknown Contributor")),
                                       shiny::sidebarPanel(width=3,shiny::selectInput("D_mdm",label="Item Response Function",list("Normal Ogive"=1,"Logistic"=2),selected=2),
                                                           shiny::selectInput("comp_mdm",label="Compensatory",list("Yes"=1,"No"=2),selected=1),
-                                                          shiny::sliderInput("delta1_mdm",label="Location 1",min=-10,max=10,value=0,step=0.1),
-                                                          shiny::sliderInput("delta2_mdm",label="Location 2",min=-10,max=10,value=0,step=0.1),
-                                                          shiny::sliderInput("alpha1_mdm",label="Discrimination 1",min=-10,max=10,value=1,step=0.1),
-                                                          shiny::sliderInput("alpha2_mdm",label="Discrimination 2",min=-10,max=10,value=1,step=0.1),
+                                                          shiny::sliderInput("delta1_mdm",label="\u{03b8}1 location",min=-10,max=10,value=0,step=0.1),
+                                                          shiny::sliderInput("delta2_mdm",label="\u{03b8}2 location",min=-10,max=10,value=0,step=0.1),
+                                                          shiny::sliderInput("alpha1_mdm",label="\u{03b8}1 discrimination",min=-10,max=10,value=1,step=0.1),
+                                                          shiny::sliderInput("alpha2_mdm",label="\u{03b8}2 discrimination",min=-10,max=10,value=1,step=0.1),
                                                           shiny::sliderInput("c_mdm",label="Lower Asymptote",min=0,max=.4,value=0,step=0.1),
                                                           shiny::sliderInput("d_mdm",label="Upper Asymptote",min=0,max=1,value=1,step=0.1),
-                                                          shiny::textInput("nametheta1_mdm",label="Name Dimension 1","Math"),
-                                                          shiny::textInput("nametheta2_mdm",label="Name Dimension 2","Reading")),
+                                                          shiny::textInput("nametheta1_mdm",label="Name of \u{03b8}1 (optional)",""),
+                                                          shiny::textInput("nametheta2_mdm",label="Name of \u{03b8}2 (optional)","")),
                                       shiny::mainPanel(shiny::tabsetPanel(shiny::tabPanel("Item Response Surface",
                                                                                           shiny::mainPanel(plotly::plotlyOutput(outputId="plotplotly",width="100%",height="800px"))),
                                                                           shiny::tabPanel("Contour Plot",shiny::inputPanel(
@@ -724,6 +727,8 @@ modelsirt<-function() {
       ##########################################################################################
       # MULTIDIMENSIONAL DICHOTOMOUS
       ##########################################################################################
+      # axis titles theta1 and theta2, with the dimension's name in front when one is typed
+      axis_title<-function(name,symbol){ if(trimws(name)=="") symbol else paste0(name," (",symbol,")") }
       pjj<-reactive({
         if(input$alpha1_mdm==0 | input$alpha2_mdm==0){stop("Select a discrimination value other than 0 (zero)!")}
         D<-switch(input$D_mdm,"1"=1,"2"=1.702)
@@ -743,8 +748,9 @@ modelsirt<-function() {
       })
       output$plotplotly<-plotly::renderPlotly({
         pjj<-pjj()
-        p3D<-plotly::plot_ly(x=thetas1,y=thetas2,z=pjj,width=700,height=700,showscale=FALSE) %>%
-          plotly::layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="P(Y=1)",range=c(0,1)),camera=list(eye=list(x=1.5,y=-1.5,z=1.5)))) %>%
+        # pjj has one row per theta1 value, but plotly draws matrix rows along y: transpose it so theta1 runs along x
+        p3D<-plotly::plot_ly(x=thetas1,y=thetas2,z=t(pjj),width=700,height=700,showscale=FALSE) %>%
+          plotly::layout(scene=list(xaxis=list(title=axis_title(input$nametheta1_mdm,"\u{03b8}1")),yaxis=list(title=axis_title(input$nametheta2_mdm,"\u{03b8}2")),zaxis=list(title="P(Y=1)",range=c(0,1)),camera=list(eye=list(x=1.5,y=-1.5,z=1.5)))) %>%
           plotly::add_surface(opacity=1)
       })
       output$plotcont<-shiny::renderPlot({
@@ -760,7 +766,7 @@ modelsirt<-function() {
         omega2<-acos(alpha2/sqrt(alpha1^2+alpha2^2)) #in radians
         Ai<-sqrt(alpha1^2+alpha2^2) #multidimensional discrimination
         Di<--gamma/Ai
-        graphics::contour(thetas1,thetas2,pjj,nlevels=input$nlevels_mdm,xlab=input$nametheta1_mdm,ylab=input$nametheta2_mdm)
+        graphics::contour(thetas1,thetas2,pjj,nlevels=input$nlevels_mdm,xlab=axis_title(input$nametheta1_mdm,"\u{03b8}1"),ylab=axis_title(input$nametheta2_mdm,"\u{03b8}2"))
         abline(h=0,v=0)
         if(c==0 & d==1){
           cont<-contourLines(thetas1,thetas2,pjj,levels=0.5)
@@ -792,7 +798,7 @@ modelsirt<-function() {
           for (j2 in 1:N_mirtd){ info[j1,j2]<-(Ai^2)*((pjj[j1,j2]-c)^2)*((d-pjj[j1,j2])^2)/((d-c)^2)*((1-pjj[j1,j2])/pjj[j1,j2]) # (Magis,2013)
           }
         }
-        graphics::persp(thetas1,thetas2,info,theta=input$angleinfo1_mdm,phi=input$angleinfo2_mdm,zlim=c(0,max(info)),xlab=input$nametheta1_mdm,ylab=input$nametheta2_mdm,zlab="Information",nticks=5,ticktype="detailed")
+        graphics::persp(thetas1,thetas2,info,theta=input$angleinfo1_mdm,phi=input$angleinfo2_mdm,zlim=c(0,max(info)),xlab=axis_title(input$nametheta1_mdm,"\u{03b8}1"),ylab=axis_title(input$nametheta2_mdm,"\u{03b8}2"),zlab="Information",nticks=5,ticktype="detailed")
       })
       output$infoplotly<-plotly::renderPlotly({
         c<-input$c_mdm
@@ -806,8 +812,8 @@ modelsirt<-function() {
           for (j2 in 1:N_mirtd){ info[j1,j2]<-(Ai^2)*((pjj[j1,j2]-c)^2)*((d-pjj[j1,j2])^2)/((d-c)^2)*((1-pjj[j1,j2])/pjj[j1,j2]) # (Magis,2013)
           }
         }
-        plotly::plot_ly(x=thetas1,y=thetas2,z=info,width=700,height=700,showscale=FALSE) %>%
-          plotly::layout(scene=list(xaxis=list(title=input$nametheta1_mdm),yaxis=list(title=input$nametheta2_mdm),zaxis=list(title="Information"),camera=list(eye=list(x=-1.5,y=1.5,z=1.5)))) %>%
+        plotly::plot_ly(x=thetas1,y=thetas2,z=t(info),width=700,height=700,showscale=FALSE) %>% # transposed like the item response surface
+          plotly::layout(scene=list(xaxis=list(title=axis_title(input$nametheta1_mdm,"\u{03b8}1")),yaxis=list(title=axis_title(input$nametheta2_mdm,"\u{03b8}2")),zaxis=list(title="Information"),camera=list(eye=list(x=-1.5,y=1.5,z=1.5)))) %>%
           plotly::add_surface(opacity=1)
       })
       ##########################################################################################

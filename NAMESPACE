@@ -3,33 +3,39 @@
 export(modelsirt)
 import(magrittr)
 importFrom(grDevices,contourLines)
-importFrom(graphics,abline)
-importFrom(graphics,arrows)
-importFrom(graphics,layout)
-importFrom(graphics,lines)
-importFrom(plotly,add_segments)
-importFrom(plotly,layout)
-importFrom(plotly,plot_ly)
-importFrom(plotly,plotlyOutput)
-importFrom(plotly,renderPlotly)
-importFrom(shiny,h4)
-importFrom(shiny,inputPanel)
-importFrom(shiny,mainPanel)
-importFrom(shiny,navbarPage)
-importFrom(shiny,plotOutput)
-importFrom(shiny,reactive)
-importFrom(shiny,renderPlot)
-importFrom(shiny,renderText)
-importFrom(shiny,selectInput)
-importFrom(shiny,shinyApp)
-importFrom(shiny,sidebarPanel)
-importFrom(shiny,sliderInput)
-importFrom(shiny,tabPanel)
-importFrom(shiny,tabsetPanel)
-importFrom(shiny,tagList)
-importFrom(shiny,textInput)
-importFrom(shiny,textOutput)
-importFrom(shiny,titlePanel)
-importFrom(shiny,withMathJax)
+importFrom(graphics,
+  abline,
+  arrows,
+  layout,
+  lines
+)
+importFrom(plotly,
+  add_segments,
+  layout,
+  plot_ly,
+  plotlyOutput,
+  renderPlotly
+)
+importFrom(shiny,
+  h4,
+  inputPanel,
+  mainPanel,
+  navbarPage,
+  plotOutput,
+  reactive,
+  renderPlot,
+  renderText,
+  selectInput,
+  shinyApp,
+  sidebarPanel,
+  sliderInput,
+  tabPanel,
+  tabsetPanel,
+  tagList,
+  textInput,
+  textOutput,
+  titlePanel,
+  withMathJax
+)
 importFrom(stats,pnorm)
 importFrom(utils,install.packages)

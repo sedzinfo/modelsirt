@@ -9,6 +9,8 @@ Authors@R: c(
     )
 Depends: plotly, shiny, magrittr
 Description: IRT curves with shinyapps.
-License: GPL (>= 2) + file LICENSE
+License: GPL-3
+URL: https://sedzinfo.github.io/modelsirt/, https://github.com/sedzinfo/modelsirt
+BugReports: https://github.com/sedzinfo/modelsirt/issues
 Encoding: UTF-8
 Config/roxygen2/version: 8.1.0

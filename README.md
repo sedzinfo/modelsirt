@@ -1,4 +1,4 @@
-# modelsirt: Interactive IRT Model Visualization
+# Interactive IRT Model Visualization
 
 ## Overview
 

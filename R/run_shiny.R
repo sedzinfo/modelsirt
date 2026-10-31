@@ -553,7 +553,7 @@ modelsirt<-function() {
                                                                                              shiny::sliderInput("pn_psi",label=shiny::withMathJax('$$\\psi$$'),min=0,max=10,value=.5,step=.1)),
                                                                          shiny::mainPanel(#shiny::plotOutput(outputId="dichotomous_plot",width="100%"),
                                                                            plotly::plotlyOutput(outputId="dichotomous_plotly",width="100%",height="700px"))),
-                                                         shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma+\\lambda_l\\eta_α-\\lambda_k\\eta_b}{\\sqrt{\\psi^2_i+\\psi^2_k}}\\right]$$'),
+                                                         shiny::tabPanel(shiny::withMathJax('$$\\phi\\,\\left[\\frac{-\\gamma+\\lambda_l\\eta_\u03b1-\\lambda_k\\eta_b}{\\sqrt{\\psi^2_i+\\psi^2_k}}\\right]$$'),
                                                                          shiny::sidebarPanel(shiny::sliderInput("pn_gamma_l",label=shiny::withMathJax('$$\\gamma$$'),min=-10,max=10,value=0,step=.1),
                                                                                              shiny::sliderInput("pn_lambda_i",label=shiny::withMathJax('$$\\lambda_i$$'),min=-10,max=10,value=.5,step=.1),
                                                                                              shiny::sliderInput("pn_lambda_k",label=shiny::withMathJax('$$\\lambda_k$$'),min=-10,max=10,value=0,step=.1),
@@ -613,7 +613,7 @@ modelsirt<-function() {
         }
         plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
           plotly::layout(title=list(text=title),
-                         xaxis=list(title="θ"),
+                         xaxis=list(title="\u03b8"),
                          yaxis=list(title="P(x)",range=c(0,1)),
                          legend=list(x=0,y=.99))%>%
           plotly::add_segments(x=min(thetas_rach,na.rm=TRUE),xend=max(thetas_rach,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
@@ -645,7 +645,7 @@ modelsirt<-function() {
                   data.frame(x=thetas_pcm,y=p5,type="P(X=5|theta)"))
         plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
           plotly::layout(title=title,
-                         xaxis=list(title="θ"),
+                         xaxis=list(title="\u03b8"),
                          yaxis=list(title="P(x)",range=c(0,1)),
                          legend=list(x=0,y=.99))%>%
           plotly::add_segments(x=min(thetas_pcm,na.rm=TRUE),xend=max(thetas_pcm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
@@ -670,7 +670,7 @@ modelsirt<-function() {
                   data.frame(x=thetas_grm,y=p[,4]-0,type="P(X=5|theta)"))
         plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
           plotly::layout(title=title,
-                         xaxis=list(title="θ"),
+                         xaxis=list(title="\u03b8"),
                          yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                          legend=list(x=0,y=.99))%>%
           plotly::add_segments(x=min(thetas_grm,na.rm=TRUE),xend=max(thetas_grm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
@@ -702,7 +702,7 @@ modelsirt<-function() {
                   data.frame(x=thetas_rsm,y=p5,type="P(X=5|theta)"))
         plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
           plotly::layout(title=title,
-                         xaxis=list(title="θ"),
+                         xaxis=list(title="\u03b8"),
                          yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                          legend=list(x=0,y=.99))%>%
           plotly::add_segments(x=min(thetas_rsm,na.rm=TRUE),xend=max(thetas_rsm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
@@ -734,7 +734,7 @@ modelsirt<-function() {
                   data.frame(x=thetas_nrm,y=p5,type="P(X=e|theta)"))
         plotly::plot_ly(data=df,x=~x,y=~y,color=~type,type="scatter",mode="lines+markers")%>%
           plotly::layout(title=list(text=paste0(title,"<br><sup>",subtitle,"</sup>")),margin=list(t=60), # this plotly has no subtitle: the note goes on a second, smaller title line, with room above the plot
-                         xaxis=list(title="θ"),
+                         xaxis=list(title="\u03b8"),
                          yaxis=list(title="P(X=m|theta)",range=c(0,1)),
                          legend=list(x=0,y=.99))%>%
           plotly::add_segments(x=min(thetas_nrm,na.rm=TRUE),xend=max(thetas_nrm,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
@@ -832,8 +832,8 @@ modelsirt<-function() {
         df<-data.frame(eta,result)
         plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
           plotly::layout(title="",
-                         xaxis=list(title="η"),
-                         yaxis=list(title="P(η)",range=c(0,1)))%>%
+                         xaxis=list(title="\u03b7"),
+                         yaxis=list(title="P(\u03b7)",range=c(0,1)))%>%
           plotly::add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
       })
       output$dichotomous_plotly1<-plotly::renderPlotly({
@@ -842,8 +842,8 @@ modelsirt<-function() {
         df<-data.frame(eta,result)
         plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
           plotly::layout(title="",
-                         xaxis=list(title="η"),
-                         yaxis=list(title="P(η)",range=c(0,1)))%>%
+                         xaxis=list(title="\u03b7"),
+                         yaxis=list(title="P(\u03b7)",range=c(0,1)))%>%
           plotly::add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
       })
       output$dichotomous_plotly2<-plotly::renderPlotly({
@@ -852,8 +852,8 @@ modelsirt<-function() {
         df<-data.frame(eta,result)
         plotly::plot_ly(data=df,x=~eta,y=~result,type="scatter",mode="lines+markers")%>%
           plotly::layout(title="",
-                         xaxis=list(title="η"),
-                         yaxis=list(title="P(η)",range=c(0,1)))%>%
+                         xaxis=list(title="\u03b7"),
+                         yaxis=list(title="P(\u03b7)",range=c(0,1)))%>%
           plotly::add_segments(x=min(eta,na.rm=TRUE),xend=max(eta,na.rm=TRUE),y=.5,yend=.5,line=list(color="gray",size=.1),inherit=FALSE,showlegend=FALSE)
       })
       ##########################################################################################
